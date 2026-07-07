@@ -295,8 +295,17 @@
     </div>
 
     <div class="bm-hero-zone">
-      <a id="bmAuto" href="#" class="bm-hero" draggable="true" onclick="return false;">⚡ IG Auto</a>
-      <p class="bm-hero-hint"><b>↑ Arrastra este botón</b> a la barra de favoritos</p>
+      <div style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <a id="bmAuto" href="#" class="bm-hero" draggable="true" onclick="return false;">🖱️ IG Auto · modo clics</a>
+          <span style="font-size:12px;color:var(--green);">✓ Recomendado — imita clics humanos, más seguro</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <a id="bmApiAuto" href="#" class="bm-hero" draggable="true" onclick="return false;" style="background:linear-gradient(180deg,#4b8bf7,var(--blue));box-shadow:0 10px 30px -8px rgba(59,130,246,.6);">🔌 IG Auto · modo API</a>
+          <span style="font-size:12px;color:var(--yellow);">⚡ Más rápido y completo — pero más riesgo de bloqueo</span>
+        </div>
+      </div>
+      <p class="bm-hero-hint" style="margin-top:16px;"><b>↑ Arrastra el que prefieras</b> a la barra de favoritos</p>
     </div>
 
     <div class="btn-row">
@@ -324,6 +333,18 @@
     <span>⚠️</span>
     <div><b>Cuídate de los límites de Instagram.</b> Dejar de seguir a mucha gente muy rápido puede provocar un bloqueo temporal de la cuenta. El botón ya mete pausas aleatorias; si vas a limpiar cientos, hazlo por tandas y no todos los días.</div>
   </div>
+
+  <!-- ===== Cómo funciona ===== -->
+  <details class="fb" style="margin-bottom:16px;">
+    <summary>🤔 ¿Cómo funciona? ¿Usa la API de Instagram?</summary>
+    <div class="fb-body">
+      Tú eliges. Los dos modos corren <b>dentro de tu propia sesión de Instagram</b> — nada sale a un servidor externo y nunca se pide tu contraseña:
+      <ol>
+        <li><b>Modo clics (🖱️):</b> automatiza la página visible — hace scroll, lee tus listas y hace clic en “Dejar de seguir”, igual que si lo hicieras a mano. Es el más <b>seguro</b> porque se ve humano. <b>No usa ninguna API.</b></li>
+        <li><b>Modo API (🔌):</b> llama a los mismos endpoints internos que usa instagram.com (<span class="tag">/api/v1/friendships/…</span>) con tu cookie de sesión. <b>Más rápido y saca las listas completas sin fallos de scroll</b>, pero pega más pedidos seguidos, así que Instagram puede marcarlo antes. Úsalo con delays altos y por tandas.</li>
+      </ol>
+    </div>
+  </details>
 
   <!-- ===== MODO MANUAL (colapsado) ===== -->
   <details class="adv">
@@ -900,6 +921,61 @@ computeDiff();
       }).catch(function(){ copyLink.textContent = url; });
     } else { copyLink.textContent = url; }
   };
+})();
+</script>
+<script>
+// ===== MODO API — bookmarklet que usa los endpoints internos de instagram.com =====
+(function(){
+  function buildApiCode(minD, maxD){
+    var code = "(function(){"
+    + "var P='_ig_api_p';var ex=document.getElementById(P);if(ex)ex.remove();"
+    + "function ck(n){var m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)'));return m?m[2]:null;}"
+    + "var myId=ck('ds_user_id'),csrf=ck('csrftoken'),APP='936619743392459';"
+    + "if(!myId){alert('Abre instagram.com e inicia sesion primero.');return;}"
+    + "var minD=" + minD + ",maxD=" + maxD + ";"
+    + "var p=document.createElement('div');p.id=P;"
+    + "p.style.cssText='position:fixed;top:20px;right:20px;z-index:999999;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:16px 18px;width:300px;font-family:-apple-system,sans-serif;font-size:13px;color:#e8e8e8;box-shadow:0 8px 30px rgba(0,0,0,.75);';"
+    + "p.innerHTML='<div style=\"font-weight:800;margin-bottom:8px;\"><span style=\"color:#3b82f6\">Williams</span> <span style=\"color:#e1306c\">DEV</span> · API</div><div id=\"_ia_st\" style=\"color:#aaa;font-size:12px;margin-bottom:10px;\">Iniciando...</div><div style=\"display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;\"><div><div style=\"color:#aaa;font-size:11px\">Sigo</div><b id=\"_ia_fg\">0</b></div><div><div style=\"color:#aaa;font-size:11px\">Me siguen</div><b id=\"_ia_fr\">0</b></div><div><div style=\"color:#aaa;font-size:11px\">No devuelven</div><b id=\"_ia_nb\" style=\"color:#eab308\">0</b></div><div><div style=\"color:#aaa;font-size:11px\">Deseguidos</div><b id=\"_ia_un\" style=\"color:#22c55e\">0</b></div></div><button id=\"_ia_go\" style=\"background:#e1306c;border:none;color:#fff;border-radius:8px;padding:10px;width:100%;font-weight:700;cursor:pointer;display:none;\">Empezar</button><button id=\"_ia_x\" style=\"background:#333;border:none;color:#aaa;border-radius:6px;padding:7px;width:100%;margin-top:6px;cursor:pointer;\">Detener / cerrar</button>';"
+    + "document.body.appendChild(p);"
+    + "var st=function(t){document.getElementById('_ia_st').textContent=t;};"
+    + "var stopped=false;document.getElementById('_ia_x').onclick=function(){stopped=true;p.remove();};"
+    + "var wait=function(ms){return new Promise(function(r){setTimeout(r,ms);});};"
+    + "var H=function(){return {'x-ig-app-id':APP,'x-csrftoken':csrf,'x-requested-with':'XMLHttpRequest'};};"
+    + "async function grab(kind,label){var out=[],max='',g=0;while(g++<500){if(stopped)break;"
+    + "var r=await fetch('/api/v1/friendships/'+myId+'/'+kind+'/?count=100'+(max?'&max_id='+max:''),{headers:H(),credentials:'include'});"
+    + "if(r.status===429||r.status===400){st('IG pidio pausa, esperando 30s...');await wait(30000);continue;}"
+    + "if(!r.ok){st('Error '+r.status+' leyendo '+label);break;}"
+    + "var j=await r.json();(j.users||[]).forEach(function(u){out.push({pk:u.pk,un:u.username});});"
+    + "st('Leyendo '+label+': '+out.length);max=j.next_max_id;if(!max)break;await wait(700+Math.random()*600);}return out;}"
+    + "(async function(){"
+    + "st('Leyendo a quien sigues...');var fg=await grab('following','seguidos');if(stopped)return;document.getElementById('_ia_fg').textContent=fg.length;"
+    + "st('Leyendo tus seguidores...');var fr=await grab('followers','seguidores');if(stopped)return;document.getElementById('_ia_fr').textContent=fr.length;"
+    + "var set={};fr.forEach(function(u){set[u.pk]=1;});var nb=fg.filter(function(u){return !set[u.pk];});"
+    + "document.getElementById('_ia_nb').textContent=nb.length;"
+    + "st(nb.length+' no te siguen de vuelta. Pulsa Empezar.');"
+    + "var go=document.getElementById('_ia_go');go.style.display='block';go.textContent='Deseguir a '+nb.length;"
+    + "go.onclick=async function(){go.disabled=true;go.style.opacity=.5;var un=0;"
+    + "for(var i=0;i<nb.length;i++){if(stopped)break;var u=nb[i];st((i+1)+'/'+nb.length+' @'+u.un);"
+    + "var r=await fetch('/api/v1/friendships/destroy/'+u.pk+'/',{method:'POST',headers:Object.assign({'content-type':'application/x-www-form-urlencoded'},H()),credentials:'include',body:''});"
+    + "if(r.status===429||r.status===400){st('IG pidio pausa larga (30s)...');await wait(30000);i--;continue;}"
+    + "if(r.ok){un++;document.getElementById('_ia_un').textContent=un;}"
+    + "await wait(minD+Math.random()*(maxD-minD));}"
+    + "st('Listo. Deseguidos: '+un);};"
+    + "})();"
+    + "})()";
+    return 'javascript:' + encodeURIComponent(code);
+  }
+  function refreshApi(){
+    var minEl=document.getElementById('minDelay'), maxEl=document.getElementById('maxDelay');
+    var minD = minEl ? parseInt(minEl.value) : 5000;
+    var maxD = maxEl ? Math.max(parseInt(maxEl.value), minD+500) : 15000;
+    var a=document.getElementById('bmApiAuto');
+    if(a) a.href = buildApiCode(minD, maxD);
+  }
+  var mn=document.getElementById('minDelay'), mx=document.getElementById('maxDelay');
+  if(mn) mn.addEventListener('input', refreshApi);
+  if(mx) mx.addEventListener('input', refreshApi);
+  refreshApi();
 })();
 </script>
 </body>
