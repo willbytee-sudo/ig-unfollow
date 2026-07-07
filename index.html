@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Deja de seguir en Instagram a quien no te sigue de vuelta — en un clic, desde tu computadora, sin instalar nada.">
-<title>IG Unfollow — Williams DEV</title>
+<title>IG Unfollow — Williams</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -216,6 +216,20 @@
   .flow-line { flex:1; height:1px; background: var(--border); }
   .flow-label { font-size: 12px; color: var(--muted2); white-space:nowrap; }
 
+  /* ---------- saludo personal ---------- */
+  .hello {
+    display:flex; align-items:center; gap: 14px;
+    background: linear-gradient(180deg, var(--surface), var(--bg2));
+    border:1px solid var(--border); border-radius: 16px;
+    padding: 14px 16px; margin-bottom: 26px;
+  }
+  .hello-pic {
+    width: 58px; height: 58px; border-radius: 50%; object-fit: cover; flex-shrink:0;
+    border: 2px solid var(--accent); box-shadow: 0 0 0 3px rgba(225,48,108,.15);
+  }
+  .hello-msg { font-size: 14px; color: var(--text); line-height: 1.45; }
+  .hello-msg b { color: var(--accent); }
+
   footer { text-align:center; margin-top: 40px; font-size: 12px; color: var(--muted2); }
   footer .b { color: var(--blue); font-weight:700; }
   footer .d { color: var(--accent); font-weight:700; }
@@ -253,8 +267,14 @@
 <div class="container">
 
   <div class="brand-row">
-    <div class="brand"><span class="b">Williams</span> <span class="d">DEV</span></div>
+    <div class="brand"><span class="b">Williams</span></div>
     <div class="brand-tag">IG Unfollow</div>
+  </div>
+
+  <div class="hello">
+    <img class="hello-pic" src="williams.jpg" alt="Williams"
+         onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><rect width=%22120%22 height=%22120%22 fill=%22%23e1306c%22/><text x=%2260%22 y=%2280%22 font-size=%2264%22 fill=%22white%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22>W</text></svg>'">
+    <div class="hello-msg"><b>¡Hey! Acá Williams</b> 👋<br>Espero te sirva la herramienta.</div>
   </div>
 
   <!-- ===== HERO ===== -->
@@ -440,7 +460,7 @@
     </div>
   </details>
 
-  <footer>Hecho por <span class="b">Williams</span> <span class="d">DEV</span> · todo corre en tu navegador, nada se envía a ningún servidor</footer>
+  <footer>Hecho por <span class="b">Williams</span> · todo corre en tu navegador, nada se envía a ningún servidor</footer>
 
 </div>
 
@@ -454,7 +474,7 @@ function getAutoFullCode() {
 var ex=document.getElementById('_igauto_p');if(ex)ex.remove();
 var panel=document.createElement('div');panel.id='_igauto_p';
 panel.style.cssText='position:fixed;top:20px;right:20px;z-index:2147483647;background:#1a1a1a;border:1px solid #e1306c44;border-radius:12px;padding:16px 18px;width:300px;font-family:-apple-system,sans-serif;font-size:13px;color:#e8e8e8;box-shadow:0 8px 30px rgba(0,0,0,.8);';
-panel.innerHTML='<div style="font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:9px;"><span style="color:#3b82f6;">Williams</span> <span style="color:#e1306c;">DEV</span></div>'+
+panel.innerHTML='<div style="font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:9px;"><span style="color:#3b82f6;">Williams</span></div>'+
 '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><b style="font-size:14px;">⚡ IG Auto</b><button id="_iga_stop" style="background:#333;border:none;color:#aaa;cursor:pointer;border-radius:6px;padding:3px 9px;font-size:11px;">■ Stop</button></div>'+
 '<div id="_iga_phase" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#e1306c;margin-bottom:6px;">Iniciando...</div>'+
 '<div id="_iga_st" style="color:#aaa;font-size:12px;margin-bottom:10px;">Verificando perfil...</div>'+
@@ -649,7 +669,7 @@ if(!scrollDiv){alert('No encontre la lista desplazable. Espera a que el modal ca
 var panel=document.createElement('div');
 panel.id='_igx_p';
 panel.style.cssText='position:fixed;top:20px;right:20px;z-index:999999;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:16px 18px;width:290px;font-family:-apple-system,sans-serif;font-size:13px;color:#e8e8e8;box-shadow:0 8px 30px rgba(0,0,0,.75);';
-panel.innerHTML='<div style="font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:9px;"><span style="color:#3b82f6;">Williams</span> <span style="color:#e1306c;text-shadow:0 0 12px rgba(225,48,108,.5);">DEV</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><b style="font-size:14px;">📥 IG Extractor</b><button id="_igx_s" style="background:#333;border:none;color:#aaa;cursor:pointer;border-radius:6px;padding:3px 9px;font-size:11px;">■ Stop</button></div><div id="_igx_st" style="color:#aaa;font-size:12px;margin-bottom:10px;">⏳ Haciendo scroll...</div><div style="display:flex;gap:14px;margin-bottom:14px;"><div><div style="color:#aaa;font-size:11px;">Total</div><b id="_igx_t" style="font-size:18px;">0</b></div><div><div style="color:#aaa;font-size:11px;">Verif. ✓</div><b id="_igx_v" style="font-size:18px;color:#3b82f6;">0</b></div><div><div style="color:#aaa;font-size:11px;">Sin verif.</div><b id="_igx_nv" style="font-size:18px;color:#22c55e;">0</b></div></div><div id="_igx_btns" style="display:none;flex-direction:column;gap:8px;"><button id="_igx_ca" style="background:#333;border:1px solid #444;color:#e8e8e8;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;text-align:left;">Copiar todos</button><button id="_igx_cn" style="background:#0d2a1a;border:1px solid #22c55e44;color:#22c55e;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;text-align:left;">Copiar sin verificados</button></div>';
+panel.innerHTML='<div style="font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:9px;"><span style="color:#3b82f6;">Williams</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><b style="font-size:14px;">📥 IG Extractor</b><button id="_igx_s" style="background:#333;border:none;color:#aaa;cursor:pointer;border-radius:6px;padding:3px 9px;font-size:11px;">■ Stop</button></div><div id="_igx_st" style="color:#aaa;font-size:12px;margin-bottom:10px;">⏳ Haciendo scroll...</div><div style="display:flex;gap:14px;margin-bottom:14px;"><div><div style="color:#aaa;font-size:11px;">Total</div><b id="_igx_t" style="font-size:18px;">0</b></div><div><div style="color:#aaa;font-size:11px;">Verif. ✓</div><b id="_igx_v" style="font-size:18px;color:#3b82f6;">0</b></div><div><div style="color:#aaa;font-size:11px;">Sin verif.</div><b id="_igx_nv" style="font-size:18px;color:#22c55e;">0</b></div></div><div id="_igx_btns" style="display:none;flex-direction:column;gap:8px;"><button id="_igx_ca" style="background:#333;border:1px solid #444;color:#e8e8e8;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;text-align:left;">Copiar todos</button><button id="_igx_cn" style="background:#0d2a1a;border:1px solid #22c55e44;color:#22c55e;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;text-align:left;">Copiar sin verificados</button></div>';
 document.body.appendChild(panel);
 var stopped=false;
 var users=new Map();
@@ -753,7 +773,7 @@ var panel=document.createElement('div');
 panel.id='_ig_uf_p';
 panel.style.cssText='position:fixed;bottom:20px;right:20px;z-index:999999;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:16px 18px;width:265px;font-family:-apple-system,sans-serif;font-size:13px;color:#e8e8e8;box-shadow:0 8px 30px rgba(0,0,0,.65);';
 var h='';
-h+='<div style="font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:9px;"><span style="color:#3b82f6;">Williams</span> <span style="color:#e1306c;text-shadow:0 0 12px rgba(225,48,108,.5);">DEV</span></div>';
+h+='<div style="font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:9px;"><span style="color:#3b82f6;">Williams</span></div>';
 h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">';
 h+='<b style="font-size:14px;">⚡ IG Unfollow</b>';
 h+='<button id="_ig_stop" style="background:#333;border:none;color:#aaa;cursor:pointer;border-radius:6px;padding:3px 9px;font-size:11px;">■ Stop</button>';
@@ -947,7 +967,7 @@ computeDiff();
     + "var minD=" + minD + ",maxD=" + maxD + ";"
     + "var p=document.createElement('div');p.id=P;"
     + "p.style.cssText='position:fixed;top:20px;right:20px;z-index:999999;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:16px 18px;width:300px;font-family:-apple-system,sans-serif;font-size:13px;color:#e8e8e8;box-shadow:0 8px 30px rgba(0,0,0,.75);';"
-    + "p.innerHTML='<div style=\"font-weight:800;margin-bottom:8px;\"><span style=\"color:#3b82f6\">Williams</span> <span style=\"color:#e1306c\">DEV</span> · API</div><div id=\"_ia_st\" style=\"color:#aaa;font-size:12px;margin-bottom:10px;\">Iniciando...</div><div style=\"display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;\"><div><div style=\"color:#aaa;font-size:11px\">Sigo</div><b id=\"_ia_fg\">0</b></div><div><div style=\"color:#aaa;font-size:11px\">Me siguen</div><b id=\"_ia_fr\">0</b></div><div><div style=\"color:#aaa;font-size:11px\">No devuelven</div><b id=\"_ia_nb\" style=\"color:#eab308\">0</b></div><div><div style=\"color:#aaa;font-size:11px\">Deseguidos</div><b id=\"_ia_un\" style=\"color:#22c55e\">0</b></div></div><button id=\"_ia_go\" style=\"background:#e1306c;border:none;color:#fff;border-radius:8px;padding:10px;width:100%;font-weight:700;cursor:pointer;display:none;\">Empezar</button><button id=\"_ia_x\" style=\"background:#333;border:none;color:#aaa;border-radius:6px;padding:7px;width:100%;margin-top:6px;cursor:pointer;\">Detener / cerrar</button>';"
+    + "p.innerHTML='<div style=\"font-weight:800;margin-bottom:8px;\"><span style=\"color:#3b82f6\">Williams</span> · API</div><div id=\"_ia_st\" style=\"color:#aaa;font-size:12px;margin-bottom:10px;\">Iniciando...</div><div style=\"display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;\"><div><div style=\"color:#aaa;font-size:11px\">Sigo</div><b id=\"_ia_fg\">0</b></div><div><div style=\"color:#aaa;font-size:11px\">Me siguen</div><b id=\"_ia_fr\">0</b></div><div><div style=\"color:#aaa;font-size:11px\">No devuelven</div><b id=\"_ia_nb\" style=\"color:#eab308\">0</b></div><div><div style=\"color:#aaa;font-size:11px\">Deseguidos</div><b id=\"_ia_un\" style=\"color:#22c55e\">0</b></div></div><button id=\"_ia_go\" style=\"background:#e1306c;border:none;color:#fff;border-radius:8px;padding:10px;width:100%;font-weight:700;cursor:pointer;display:none;\">Empezar</button><button id=\"_ia_x\" style=\"background:#333;border:none;color:#aaa;border-radius:6px;padding:7px;width:100%;margin-top:6px;cursor:pointer;\">Detener / cerrar</button>';"
     + "document.body.appendChild(p);"
     + "var st=function(t){document.getElementById('_ia_st').textContent=t;};"
     + "var stopped=false;document.getElementById('_ia_x').onclick=function(){stopped=true;p.remove();};"
