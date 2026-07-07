@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Deja de seguir en Instagram a quien no te sigue de vuelta — en un clic, desde tu computadora, sin instalar nada.">
+<title>IG Unfollow — Williams DEV</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0c0e;
+    --bg2: #101014;
+    --surface: #17171b;
+    --surface2: #202027;
+    --border: #2b2b33;
+    --text: #ececf0;
+    --muted: #8a8a96;
+    --muted2: #6a6a76;
+    --accent: #e1306c;
+    --accent-hover: #c9255f;
+    --accent-soft: #2a0f1a;
+    --blue: #3b82f6;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --mono: 'SFMono-Regular', ui-monospace, 'Courier New', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background:
+      radial-gradient(900px 500px at 50% -8%, rgba(225,48,108,.14), transparent 60%),
+      radial-gradient(700px 400px at 90% 0%, rgba(59,130,246,.08), transparent 55%),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 34px 18px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 660px; margin: 0 auto; }
+
+  /* ---------- brand ---------- */
+  .brand-row { display:flex; align-items:center; gap:10px; margin-bottom: 30px; }
+  .brand {
+    font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+  }
+  .brand .b { color: var(--blue); }
+  .brand .d { color: var(--accent); text-shadow: 0 0 18px rgba(225,48,108,.45); }
+  .brand-tag {
+    margin-left:auto; font-size: 11px; color: var(--muted2);
+    border:1px solid var(--border); border-radius:999px; padding:3px 10px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero { text-align:center; margin-bottom: 26px; }
+  .hero-badge {
+    display:inline-block; font-size: 12px; font-weight:600; color: var(--accent);
+    background: var(--accent-soft); border:1px solid #e1306c33;
+    border-radius: 999px; padding: 5px 13px; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 6.4vw, 42px); font-weight: 820; line-height: 1.08;
+    letter-spacing: -1.2px; color:#fff;
+  }
+  .hero h1 span { color: var(--accent); text-shadow: 0 0 26px rgba(225,48,108,.4); }
+  .hero-sub { color: var(--muted); margin: 14px auto 0; max-width: 500px; font-size: 15px; }
+
+  /* ---------- card ---------- */
+  .card {
+    background: linear-gradient(180deg, var(--surface), var(--bg2));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .card.glow { border-color:#e1306c44; box-shadow: 0 0 0 1px #e1306c11, 0 20px 60px -30px rgba(225,48,108,.5); }
+
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--muted2); margin: 30px 0 12px;
+  }
+
+  /* ---------- install steps ---------- */
+  .steps3 { display:flex; flex-direction:column; gap: 0; }
+  .step { display:flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .step:last-child { border-bottom:none; }
+  .step-n {
+    flex-shrink:0; width: 28px; height:28px; border-radius: 50%;
+    background: var(--accent); color:#fff; font-weight:800; font-size: 14px;
+    display:flex; align-items:center; justify-content:center; margin-top:1px;
+    box-shadow: 0 4px 14px -4px rgba(225,48,108,.7);
+  }
+  .step-body { flex:1; }
+  .step-body h3 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .step-body p { font-size: 13.5px; color: var(--muted); }
+
+  .kbd {
+    display:inline-block; font-family: var(--mono); font-size: 12px; color:#fff;
+    background: var(--surface2); border:1px solid var(--border);
+    border-bottom-width: 2px; border-radius: 6px; padding: 2px 8px; margin: 0 1px;
+  }
+
+  /* fake bookmarks bar illustration */
+  .fakebar {
+    margin-top: 10px; background: #1b1b20; border:1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; display:flex; align-items:center; gap:10px;
+    font-size: 12px; color: var(--muted2);
+  }
+  .fakebar .star { opacity:.6; }
+  .fakebar .drop {
+    margin-left:auto; border:1px dashed #e1306c66; color:var(--accent);
+    border-radius:6px; padding: 3px 10px; font-weight:600;
+    animation: pulse 1.8s ease-in-out 4;
+  }
+  @keyframes pulse { 0%,100%{opacity:.55} 50%{opacity:1} }
+
+  /* ---------- the hero bookmarklet button ---------- */
+  .bm-hero-zone { text-align:center; margin-top: 20px; }
+  .bm-hero {
+    display:inline-flex; align-items:center; gap:9px;
+    background: linear-gradient(180deg, #f0417a, var(--accent));
+    color:#fff; font-weight: 800; font-size: 17px;
+    padding: 15px 30px; border-radius: 13px; text-decoration:none;
+    cursor: grab; user-select:none; border:none;
+    box-shadow: 0 10px 30px -8px rgba(225,48,108,.65);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .bm-hero:hover { transform: translateY(-2px); box-shadow: 0 16px 40px -10px rgba(225,48,108,.8); }
+  .bm-hero:active { cursor: grabbing; transform: scale(.97); }
+  .bm-hero-hint { margin-top: 11px; font-size: 13px; color: var(--muted); }
+  .bm-hero-hint b { color: var(--accent); }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+    cursor:pointer; border-radius: 10px; padding: 11px 16px;
+    font-size: 13.5px; font-weight: 600; font-family: var(--sans);
+    transition: background .15s, border-color .15s;
+  }
+  .btn:hover { background: #2a2a33; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color:#fff; }
+  .btn.primary:hover { background: var(--accent-hover); }
+  .btn.full { width:100%; }
+  .btn-row { display:flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .btn-row .btn { flex: 1; min-width: 150px; }
+
+  .status { font-size: 12.5px; margin-top: 10px; display:none; line-height:1.5; }
+
+  /* fallback details */
+  details.fb { margin-top: 14px; border:1px solid var(--border); border-radius: 10px; overflow:hidden; }
+  details.fb > summary {
+    cursor:pointer; list-style:none; padding: 11px 14px; font-size: 13px; font-weight:600;
+    color: var(--muted); background: var(--surface2); user-select:none;
+  }
+  details.fb > summary::-webkit-details-marker { display:none; }
+  details.fb > summary::before { content:'▸ '; color: var(--accent); }
+  details.fb[open] > summary::before { content:'▾ '; }
+  details.fb .fb-body { padding: 14px; font-size: 13px; color: var(--muted); line-height: 1.75; }
+  details.fb .fb-body ol { padding-left: 18px; }
+  details.fb .fb-body li { margin-bottom: 6px; }
+
+  /* ---------- note ---------- */
+  .note {
+    display:flex; gap: 11px; align-items:flex-start;
+    background: #1c1607; border:1px solid #eab30833; border-radius: 12px;
+    padding: 13px 15px; font-size: 13px; color: #cbb98a; line-height: 1.65; margin-bottom: 16px;
+  }
+  .note b { color: var(--yellow); }
+
+  /* ---------- advanced ---------- */
+  details.adv { margin-top: 8px; }
+  details.adv > summary {
+    cursor:pointer; list-style:none; text-align:center;
+    font-size: 13.5px; font-weight: 600; color: var(--muted);
+    padding: 12px; border:1px dashed var(--border); border-radius: 12px;
+    user-select:none; transition: border-color .15s, color .15s;
+  }
+  details.adv > summary:hover { border-color: var(--muted2); color: var(--text); }
+  details.adv > summary::-webkit-details-marker { display:none; }
+  details.adv[open] > summary { margin-bottom: 14px; }
+  .adv-intro { font-size: 13px; color: var(--muted2); text-align:center; margin: -4px 0 16px; }
+
+  .card-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted2); margin-bottom: 12px; }
+  label { display:block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  textarea {
+    width:100%; background: var(--bg2); border:1px solid var(--border); border-radius: 9px;
+    color: var(--text); font-family: var(--mono); font-size: 12px; padding: 10px 12px;
+    resize: vertical; min-height: 110px; outline:none; transition: border-color .15s;
+  }
+  textarea:focus { border-color: var(--accent); }
+  .row { display:flex; gap: 14px; }
+  .row .field { flex:1; }
+  @media (max-width: 520px){ .row { flex-direction: column; } }
+  .counter { font-size: 12px; color: var(--muted2); margin-top: 6px; }
+  .range-wrap { display:flex; align-items:center; gap: 10px; }
+  input[type=range]{ flex:1; -webkit-appearance:none; height:4px; background: var(--border); border-radius:4px; outline:none; cursor:pointer; }
+  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:16px; height:16px; background: var(--accent); border-radius:50%; cursor:pointer; }
+  .range-val { font-family: var(--mono); font-size: 12px; min-width: 46px; text-align:right; }
+  .est { font-size: 12px; color: var(--muted); margin-top: 10px; text-align:center; }
+  .est b { color: var(--green); }
+  .result-label { display:block; font-size: 13px; color: var(--accent); font-weight:600; margin: 16px 0 6px; }
+  .bm-mini {
+    display:inline-block; background: var(--accent); color:#fff; font-weight:700; font-size: 13px;
+    padding: 9px 18px; border-radius: 9px; text-decoration:none; cursor:grab; user-select:none;
+  }
+  .bm-mini.blue { background: var(--blue); }
+  .bm-zone { text-align:center; background: var(--bg2); border:1px dashed var(--border); border-radius:10px; padding: 16px; }
+  .bm-hint { font-size: 12px; color: var(--muted2); margin-top: 9px; }
+  .tag { font-family: var(--mono); font-size: 11px; color: var(--yellow); background: var(--surface2); border:1px solid var(--border); border-radius:4px; padding: 1px 6px; }
+  .flow { display:flex; align-items:center; gap:12px; margin: 20px 0; }
+  .flow-line { flex:1; height:1px; background: var(--border); }
+  .flow-label { font-size: 12px; color: var(--muted2); white-space:nowrap; }
+
+  footer { text-align:center; margin-top: 40px; font-size: 12px; color: var(--muted2); }
+  footer .b { color: var(--blue); font-weight:700; }
+  footer .d { color: var(--accent); font-weight:700; }
+
+  /* ---------- mobile gate ---------- */
+  .mobile-gate {
+    position: fixed; inset: 0; z-index: 10000;
+    background: rgba(10,10,12,.92); backdrop-filter: blur(6px);
+    display:flex; align-items:center; justify-content:center; padding: 24px;
+  }
+  .mg-card {
+    background: var(--surface); border:1px solid var(--border); border-radius: 18px;
+    padding: 30px 24px; max-width: 380px; text-align:center;
+  }
+  .mg-emoji { font-size: 46px; margin-bottom: 8px; }
+  .mg-card h2 { font-size: 21px; color:#fff; margin-bottom: 10px; letter-spacing:-.5px; }
+  .mg-card p { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+  .mg-card .btn { width:100%; margin-bottom: 10px; }
+  .mg-link { background:none; border:none; color: var(--muted2); font-size: 13px; cursor:pointer; text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<!-- ===== Mobile gate (solo se muestra en celular) ===== -->
+<div id="mobileGate" class="mobile-gate" style="display:none;">
+  <div class="mg-card">
+    <div class="mg-emoji">💻</div>
+    <h2>Ábrela en tu computadora</h2>
+    <p>Esta herramienta se usa arrastrando un botón a la barra de favoritos del navegador — algo que solo existe en la <b>computadora</b>. En el celular Instagram no permite ejecutarla.</p>
+    <button id="mgCopyLink" class="btn primary">📋 Copiar el link para abrirlo en la compu</button>
+    <button id="mgContinue" class="mg-link">Ver la página de todos modos</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="brand-row">
+    <div class="brand"><span class="b">Williams</span> <span class="d">DEV</span></div>
+    <div class="brand-tag">IG Unfollow</div>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-badge">Solo computadora · sin instalar nada</div>
+    <h1>Deja de seguir a quien <span>no te sigue</span></h1>
+    <p class="hero-sub">Arrastra el botón una sola vez. Después, estando en tu perfil de Instagram, <b>un clic</b> abre tus listas, calcula quién no te sigue de vuelta y los desegue solo — con pausas para no alertar a Instagram.</p>
+  </section>
+
+  <!-- ===== INSTALACIÓN (3 pasos + botón héroe) ===== -->
+  <div class="card glow">
+    <div class="steps3">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <h3>Muestra la barra de favoritos</h3>
+          <p>Pulsa <span class="kbd" id="kbShortcut">Ctrl + Shift + B</span> en tu navegador. Aparece una barrita bajo la dirección web.</p>
+          <div class="fakebar">
+            <span class="star">★</span> <span>tus favoritos</span>
+            <span class="drop" id="dropHint">suelta aquí ↓</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <h3>Arrastra el botón rosado a esa barra</h3>
+          <p>Mantén presionado <b>⚡ IG Auto</b> (abajo) y suéltalo sobre la barra de favoritos. Queda guardado para siempre — solo se hace una vez.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <h3>Ve a tu perfil de Instagram y haz clic</h3>
+          <p>Abre <span class="tag">instagram.com/tu_usuario</span>, y en la barra de favoritos haz clic en <b>⚡ IG Auto</b>. El resto es automático.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bm-hero-zone">
+      <a id="bmAuto" href="#" class="bm-hero" draggable="true" onclick="return false;">⚡ IG Auto</a>
+      <p class="bm-hero-hint"><b>↑ Arrastra este botón</b> a la barra de favoritos</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="btnTestAuto">🧪 Probar que funciona</button>
+      <button class="btn" id="btnCopyAuto">📋 No puedo arrastrar — copiar código</button>
+    </div>
+    <div id="autoStatus" class="status"></div>
+
+    <details class="fb">
+      <summary>El clic en el favorito no hace nada / no me deja arrastrar</summary>
+      <div class="fb-body">
+        Chrome a veces borra el prefijo <span class="tag">javascript:</span> al pegar, por seguridad. Solución manual:
+        <ol>
+          <li>Toca <b>📋 copiar código</b> (arriba).</li>
+          <li>Clic derecho en la barra de favoritos → <b>Añadir página…</b></li>
+          <li><b>Nombre:</b> IG Auto — <b>URL:</b> pega el código. Si al inicio falta <span class="tag">javascript:</span>, escríbelo tú a mano.</li>
+          <li>Guardar. Listo — ya puedes usarlo desde tu perfil de Instagram.</li>
+        </ol>
+      </div>
+    </details>
+  </div>
+
+  <!-- ===== Aviso de seguridad ===== -->
+  <div class="note">
+    <span>⚠️</span>
+    <div><b>Cuídate de los límites de Instagram.</b> Dejar de seguir a mucha gente muy rápido puede provocar un bloqueo temporal de la cuenta. El botón ya mete pausas aleatorias; si vas a limpiar cientos, hazlo por tandas y no todos los días.</div>
+  </div>
+
+  <!-- ===== MODO MANUAL (colapsado) ===== -->
+  <details class="adv">
+    <summary>🔧 Modo manual — si el automático falla o quieres más control</summary>
+
+    <p class="adv-intro">Extrae cada lista por separado, compáralas y desegue solo a los que elijas.</p>
+
+    <div class="section-label">01 — Extractor</div>
+    <div class="card">
+      <div class="card-title">Extraer una lista (seguidos o seguidores)</div>
+      <div class="bm-zone">
+        <a id="bmExtract" href="#" class="bm-mini blue" onclick="return false;">📥 IG Extractor</a>
+        <div class="bm-hint">Arrástralo a favoritos · úsalo con el modal de Seguidos o Seguidores abierto</div>
+      </div>
+      <p class="bm-hint" style="margin-top:10px;">Hace scroll solo, detecta cuentas <b style="color:var(--blue)">verificadas ✓</b> y al final te deja <b>Copiar todos</b> o <b>Copiar sin verificados</b>.</p>
+    </div>
+
+    <div class="section-label">02 — Comparar · quién no te sigue de vuelta</div>
+    <div class="card">
+      <div class="card-title">Pega tus dos listas</div>
+      <div class="row">
+        <div class="field">
+          <label>Seguidos — los que <b style="color:var(--text)">TÚ</b> sigues</label>
+          <textarea id="following" placeholder="Pega aquí tu lista de Seguidos"></textarea>
+          <div class="counter" id="cFollowing">0 seguidos</div>
+        </div>
+        <div class="field">
+          <label>Seguidores — los que <b style="color:var(--text)">TE</b> siguen</label>
+          <textarea id="followers" placeholder="Pega aquí tu lista de Seguidores"></textarea>
+          <div class="counter" id="cFollowers">0 seguidores</div>
+        </div>
+      </div>
+      <div class="est" id="diffSummary"></div>
+      <div id="diffWrap" style="display:none;">
+        <label class="result-label">🚫 No te siguen de vuelta</label>
+        <textarea id="diffResult" readonly style="min-height:100px;"></textarea>
+        <div class="btn-row">
+          <button class="btn" id="btnCopyDiff">📋 Copiar</button>
+          <button class="btn primary" id="btnSendDiff">⬇ Enviar a deseguir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-line"></div>
+      <div class="flow-label">↓ la lista cae aquí, lista para deseguir</div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="section-label">03 — Deseguir</div>
+    <div class="card">
+      <div class="card-title">Usuarios a deseguir</div>
+      <label>Pega los usernames — separados por comas, espacios o saltos de línea</label>
+      <textarea id="users" placeholder="usuario1, usuario2&#10;usuario3"></textarea>
+      <div class="counter" id="counter">0 usuarios detectados</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Intervalo de espera entre cada uno</div>
+      <div class="row">
+        <div class="field">
+          <label>Mínimo</label>
+          <div class="range-wrap">
+            <input type="range" id="minDelay" min="1000" max="30000" step="500" value="5000">
+            <span class="range-val" id="minVal">5.0s</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Máximo</label>
+          <div class="range-wrap">
+            <input type="range" id="maxDelay" min="1000" max="30000" step="500" value="15000">
+            <span class="range-val" id="maxVal">15.0s</span>
+          </div>
+        </div>
+      </div>
+      <div class="est" id="estimate"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tu bookmarklet de deseguir</div>
+      <div class="bm-zone">
+        <a id="bmUnfollow" href="#" class="bm-mini" onclick="return false;">⚡ IG Unfollow</a>
+        <div class="bm-hint">Se genera con tu lista y tus delays · arrástralo a favoritos</div>
+      </div>
+    </div>
+  </details>
+
+  <footer>Hecho por <span class="b">Williams</span> <span class="d">DEV</span> · todo corre en tu navegador, nada se envía a ningún servidor</footer>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// AUTO ALL-IN-ONE — loader (~200 chars) + código real en localStorage
+// ═══════════════════════════════════════
+
+function getAutoFullCode() {
+  return `(function(){
+var ex=document.getElementById('_igauto_p');if(ex)ex.remove();
+var panel=document.createElement('div');panel.id='_igauto_p';
+panel.style.cssText='position:fixed;top:20px;right:20px;z-index:2147483647;background:#1a1a1a;border:1px solid #e1306c44;border-radius:12px;padding:16px 18px;width:300px;font-family:-apple-system,sans-serif;font-size:13px;color:#e8e8e8;box-shadow:0 8px 30px rgba(0,0,0,.8);';
+panel.innerHTML='<div style="font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:9px;"><span style="color:#3b82f6;">Williams</span> <span style="color:#e1306c;">DEV</span></div>'+
+'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><b style="font-size:14px;">⚡ IG Auto</b><button id="_iga_stop" style="background:#333;border:none;color:#aaa;cursor:pointer;border-radius:6px;padding:3px 9px;font-size:11px;">■ Stop</button></div>'+
+'<div id="_iga_phase" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#e1306c;margin-bottom:6px;">Iniciando...</div>'+
+'<div id="_iga_st" style="color:#aaa;font-size:12px;margin-bottom:10px;">Verificando perfil...</div>'+
+'<div style="display:flex;gap:12px;margin-bottom:14px;">'+
+'<div><div style="color:#aaa;font-size:11px;">Seguidos</div><b id="_iga_fw" style="font-size:16px;color:#3b82f6;">0</b></div>'+
+'<div><div style="color:#aaa;font-size:11px;">Seguidores</div><b id="_iga_fr" style="font-size:16px;color:#3b82f6;">0</b></div>'+
+'<div><div style="color:#aaa;font-size:11px;">No siguen</div><b id="_iga_df" style="font-size:16px;color:#e1306c;">—</b></div>'+
+'</div><div id="_iga_action" style="display:none;flex-direction:column;gap:8px;"></div>';
+document.body.appendChild(panel);
+var stopped=false;
+document.getElementById('_iga_stop').onclick=function(){stopped=true;this.textContent='Detenido';};
+var delay=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
+var SKIP={explore:1,accounts:1,p:1,reel:1,reels:1,tv:1,direct:1,stories:1,channel:1,audio:1,location:1,about:1,ar:1,vr:1,legal:1,privacy:1,terms:1,emails:1};
+function getU(href){try{var url=new URL(href);if(url.hostname.indexOf('instagram.com')<0)return null;var parts=url.pathname.split('/').filter(Boolean);if(parts.length===1&&!SKIP[parts[0]])return parts[0];}catch(e){}return null;}
+function st(msg){var el=document.getElementById('_iga_st');if(el)el.textContent=msg;}
+function ph(msg){var el=document.getElementById('_iga_phase');if(el)el.textContent=msg;}
+function openModal(type){
+var path=type==='following'?'/following':'/followers';
+var found=Array.from(document.querySelectorAll('a[href]')).find(function(a){return a.href&&a.href.indexOf(path)>-1;});
+if(found){found.click();return true;}
+var kw=type==='following'?['seguidos','following']:['seguidores','followers'];
+found=Array.from(document.querySelectorAll('a,button,span[role="link"]')).find(function(el){
+var t=(el.textContent||'').toLowerCase().trim();
+return kw.some(function(k){return t.indexOf(k)>-1;});
+});
+if(found){found.click();return true;}
+return false;
+}
+async function waitDialog(ms){
+var t=0;while(t<ms){var d=document.querySelector('div[role="dialog"]');if(d)return d;await delay(300);t+=300;}return null;
+}
+async function extract(dialog,labelId){
+var users=new Map();
+function col(){
+Array.from(dialog.querySelectorAll('a')).forEach(function(a){var u=getU(a.href);if(u&&!users.has(u))users.set(u,false);});
+Array.from(dialog.querySelectorAll('[aria-label]')).forEach(function(b){
+var al=(b.getAttribute('aria-label')||'').toLowerCase();if(al.indexOf('verif')<0)return;
+var c=b.parentElement,h=0;while(c&&h<8){var ln=Array.from(c.querySelectorAll('a')).map(function(a){return getU(a.href);}).filter(Boolean)[0];if(ln){users.set(ln,true);break;}c=c.parentElement;h++;}
+});
+}
+var sd=Array.from(dialog.querySelectorAll('div')).filter(function(d){return d.scrollHeight-d.clientHeight>100;}).sort(function(a,b){return b.scrollHeight-a.scrollHeight;})[0];
+if(!sd)return users;
+var lH=-1,lC=-1,stall=0;
+while(!stopped){
+col();var lb=document.getElementById(labelId);if(lb)lb.textContent=users.size;
+sd.scrollTop=sd.scrollHeight;await delay(1300);
+var h=sd.scrollHeight,c=users.size;
+if(h===lH&&c===lC){stall++;if(stall>=3){await delay(2200);col();lb=document.getElementById(labelId);if(lb)lb.textContent=users.size;c=users.size;}if(stall>=12)break;}else{stall=0;}
+lH=h;lC=c;
+}
+col();var lb=document.getElementById(labelId);if(lb)lb.textContent=users.size;
+return users;
+}
+function closeD(){
+var d=document.querySelector('div[role="dialog"]');
+if(!d)return;
+var b=d.querySelector('button[aria-label="Cerrar"],button[aria-label="Close"]');
+if(b){b.click();return;}
+document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+}
+async function doUnfollow(list){
+var setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
+var res={ok:[],nf:[]};
+var act=document.getElementById('_iga_action');act.style.display='flex';
+act.innerHTML='<div id="_iga_ucur" style="color:#aaa;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Iniciando...</div>'+
+'<div style="display:flex;gap:10px;font-size:12px;"><span style="color:#aaa;">Progreso</span><b id="_iga_uprog">0/'+list.length+'</b>'+
+'<span style="color:#22c55e;">✓ <b id="_iga_uok">0</b></span><span style="color:#eab308;">? <b id="_iga_unf">0</b></span></div>';
+for(var i=0;i<list.length;i++){
+if(stopped)break;
+var u=list[i];
+var cur=document.getElementById('_iga_ucur');if(cur)cur.textContent='🔍 '+u;
+var prog=document.getElementById('_iga_uprog');if(prog)prog.textContent=(i+1)+'/'+list.length;
+var inp=document.querySelector('input[placeholder="Buscar"]')||document.querySelector('input[placeholder="Search"]')||document.querySelector('input[type="text"][placeholder*="Busca"]');
+if(!inp){if(cur)cur.textContent='❌ Abre modal Seguidos con buscador';await delay(4000);inp=document.querySelector('input[placeholder="Buscar"]')||document.querySelector('input[placeholder="Search"]');if(!inp)break;}
+setter.call(inp,u);inp.dispatchEvent(new Event('input',{bubbles:true}));await delay(1400);
+var sig=Array.from(document.querySelectorAll('button')).find(function(b){return (b.textContent.trim()==='Siguiendo'||b.textContent.trim()==='Following');});
+if(sig){sig.click();await delay(700+Math.random()*400);var dej=Array.from(document.querySelectorAll('button')).find(function(b){return (b.textContent.trim()==='Dejar de seguir'||b.textContent.trim()==='Unfollow');});if(dej)dej.click();res.ok.push(u);var ok=document.getElementById('_iga_uok');if(ok)ok.textContent=res.ok.length;}
+else{res.nf.push(u);var nf=document.getElementById('_iga_unf');if(nf)nf.textContent=res.nf.length;}
+await delay(5000+Math.random()*10000);
+}
+if(cur)cur.textContent='✅ Completado';
+var s=document.getElementById('_iga_stop');if(s){s.textContent='Cerrar';s.onclick=function(){panel.remove();};}
+alert('✅ Completado\\nDeseguidos: '+res.ok.length+'\\nNo encontrados: '+res.nf.length);
+}
+async function startUnfollow(list){
+ph('Fase 4 — Deseguir');st('🔗 Abriendo Seguidos...');
+openModal('following');await delay(2000);
+var d=await waitDialog(6000);if(!d){st('❌ Abre el modal de Seguidos manualmente.');return;}
+await doUnfollow(list);
+}
+function showEditor(list,fwMap){
+panel.style.width='360px';panel.style.maxHeight='92vh';panel.style.overflowY='auto';
+ph('Editar lista');
+var sel={};list.forEach(function(u){sel[u]=true;});
+function cnt(){return Object.values(sel).filter(Boolean).length;}
+function render(){
+var ck=cnt();
+var rows=list.map(function(u){
+var v=fwMap.get(u)===true;
+var chk=sel[u]?'checked':'';
+var bv=v?'<span style="font-size:9px;background:#1a2a3a;color:#3b82f6;border:1px solid #3b82f644;border-radius:3px;padding:1px 4px;margin-left:4px;">✓ verif</span>':'';
+return '<label style="display:flex;align-items:center;gap:8px;padding:5px 4px;border-radius:5px;cursor:pointer;" onmouseover="this.style.background=\'#242424\'" onmouseout="this.style.background=\'transparent\'">'+
+'<input type="checkbox" data-u="'+u+'" '+chk+' style="accent-color:#e1306c;width:14px;height:14px;cursor:pointer;flex-shrink:0;">'+
+'<span style="font-size:12px;color:#e8e8e8;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">@'+u+'</span>'+bv+'</label>';
+}).join('');
+var act=document.getElementById('_iga_action');act.style.display='flex';
+act.innerHTML=
+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'+
+'<span style="font-size:11px;color:#aaa;"><b id="_iga_ecount" style="color:#e8e8e8;">'+ck+'</b> de '+list.length+'</span>'+
+'<div style="display:flex;gap:6px;">'+
+'<button id="_iga_eall" style="background:#242424;border:1px solid #333;color:#aaa;cursor:pointer;border-radius:5px;padding:3px 8px;font-size:10px;">Todo</button>'+
+'<button id="_iga_enone" style="background:#242424;border:1px solid #333;color:#aaa;cursor:pointer;border-radius:5px;padding:3px 8px;font-size:10px;">Ninguno</button>'+
+'</div></div>'+
+'<div id="_iga_elist" style="max-height:320px;overflow-y:auto;border:1px solid #2e2e2e;border-radius:7px;padding:4px 6px;margin-bottom:10px;background:#111;">'+rows+'</div>'+
+'<button id="_iga_edo" style="background:#e1306c;border:none;color:#fff;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;">⚡ Deseguir '+ck+' seleccionados</button>'+
+'<button id="_iga_eback" style="background:#1a1a1a;border:1px solid #333;color:#aaa;cursor:pointer;border-radius:8px;padding:7px 12px;font-size:11px;width:100%;margin-top:6px;">← Volver</button>';
+document.getElementById('_iga_elist').addEventListener('change',function(e){
+if(e.target.dataset.u){sel[e.target.dataset.u]=e.target.checked;var c=cnt();var ec=document.getElementById('_iga_ecount');if(ec)ec.textContent=c;var ed=document.getElementById('_iga_edo');if(ed)ed.textContent='⚡ Deseguir '+c+' seleccionados';}
+});
+document.getElementById('_iga_eall').onclick=function(){list.forEach(function(u){sel[u]=true;});render();};
+document.getElementById('_iga_enone').onclick=function(){list.forEach(function(u){sel[u]=false;});render();};
+document.getElementById('_iga_edo').onclick=async function(){var final=list.filter(function(u){return sel[u];});if(!final.length){alert('Ninguno seleccionado.');return;}await startUnfollow(final);};
+document.getElementById('_iga_eback').onclick=function(){panel.style.width='300px';panel.style.maxHeight='';panel.style.overflowY='';showActions(list,fwMap);};
+}
+render();
+}
+function showActions(notBack,fwMap){
+ph('Fase 3 — ¿Qué hacer?');st(notBack.length+' no te siguen de vuelta');
+var noVerif=notBack.filter(function(u){return fwMap.get(u)!==true;});
+var act=document.getElementById('_iga_action');act.style.display='flex';
+act.innerHTML=
+'<button id="_iga_btn_all" style="background:#e1306c;border:none;color:#fff;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;">⚡ Deseguir los '+notBack.length+' ahora</button>'+
+(noVerif.length?
+'<button id="_iga_btn_nv" style="background:#1a0a0f;border:1px solid #e1306c66;color:#e1306c;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;">🚫 Solo no verificados ('+noVerif.length+')</button>':
+'<button disabled style="background:#1a1a1a;border:1px solid #333;color:#555;border-radius:8px;padding:9px 12px;font-size:12px;width:100%;">🚫 Todos están verificados</button>')+
+'<button id="_iga_btn_edit" style="background:#242424;border:1px solid #444;color:#e8e8e8;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;">✏️ Editar lista ('+notBack.length+')</button>'+
+'<button id="_iga_btn_copy" style="background:#1a1a1a;border:1px solid #333;color:#aaa;cursor:pointer;border-radius:8px;padding:7px 12px;font-size:11px;width:100%;">📋 Solo copiar lista</button>';
+document.getElementById('_iga_btn_all').onclick=async function(){await startUnfollow(notBack);};
+if(noVerif.length)document.getElementById('_iga_btn_nv').onclick=async function(){await startUnfollow(noVerif);};
+document.getElementById('_iga_btn_edit').onclick=function(){showEditor(notBack,fwMap);};
+document.getElementById('_iga_btn_copy').onclick=function(){navigator.clipboard.writeText(notBack.join('\\n')).then(function(){var b=document.getElementById('_iga_btn_copy');if(b)b.textContent='✅ Copiado';});};
+}
+(async function(){
+var m=location.pathname.match(/^\\/([^/]+)\\/?$/);
+if(!m||SKIP[m[1]]){st('❌ Ve a tu perfil: instagram.com/tu_usuario');return;}
+ph('Fase 1 — Seguidos');st('🔗 Abriendo Seguidos...');
+if(!openModal('following')){st('❌ No encontré el link de Seguidos. ¿Estás en tu perfil?');return;}
+await delay(2000);
+var d1=await waitDialog(8000);if(!d1){st('❌ Modal no apareció. Recarga e intenta.');return;}
+st('⏳ Extrayendo Seguidos...');
+var fwMap=await extract(d1,'_iga_fw');if(stopped)return;
+st('✅ '+fwMap.size+' seguidos · cerrando...');closeD();await delay(1500);
+ph('Fase 2 — Seguidores');st('🔗 Abriendo Seguidores...');
+if(!openModal('followers')){st('❌ No encontré el link de Seguidores.');return;}
+await delay(2000);
+var d2=await waitDialog(8000);if(!d2){st('❌ Modal Seguidores no apareció.');return;}
+st('⏳ Extrayendo Seguidores...');
+var frMap=await extract(d2,'_iga_fr');if(stopped)return;
+st('✅ '+frMap.size+' seguidores · cerrando...');closeD();await delay(1200);
+ph('Fase 3 — Calculando');
+var frSet=new Set();frMap.forEach(function(_,k){frSet.add(k.toLowerCase());});
+var notBack=[];fwMap.forEach(function(_,k){if(!frSet.has(k.toLowerCase()))notBack.push(k);});
+var dfEl=document.getElementById('_iga_df');if(dfEl)dfEl.textContent=notBack.length;
+if(notBack.length===0){ph('✅ Todo en orden');st('¡Todos te siguen de vuelta!');var s=document.getElementById('_iga_stop');if(s){s.textContent='Cerrar';s.onclick=function(){panel.remove();};}return;}
+showActions(notBack,fwMap);
+})();
+})()`;
+}
+
+// Bookmarklet directo — el href recibe el JS en texto plano, sin encodeURIComponent.
+// encodeURIComponent produce %28function... que el navegador NO decodifica ni ejecuta.
+// El navegador ejecuta el texto después de "javascript:" directamente como JS.
+function buildAutoBM() {
+  var fullCode = getAutoFullCode(); // (function(){...})()
+  return 'javascript:' + encodeURIComponent(fullCode);
+}
+
+// ═══════════════════════════════════════
+// EXTRACTOR BOOKMARKLET (function.toString trick — no injected values)
+// ═══════════════════════════════════════ (function.toString trick — no injected values)
+// ═══════════════════════════════════════
+function buildExtractorBM() {
+  var code = `(function(){
+var ex=document.getElementById('_igx_p');if(ex)ex.remove();
+var dialog=document.querySelector('div[role="dialog"]');
+if(!dialog){alert('Abre primero el modal de Seguidos o Seguidores en tu perfil.');return;}
+var scrollDiv=Array.from(dialog.querySelectorAll('div')).filter(function(d){return d.scrollHeight-d.clientHeight>100;}).sort(function(a,b){return b.scrollHeight-a.scrollHeight;})[0];
+if(!scrollDiv){alert('No encontre la lista desplazable. Espera a que el modal cargue del todo y reintenta.');return;}
+var panel=document.createElement('div');
+panel.id='_igx_p';
+panel.style.cssText='position:fixed;top:20px;right:20px;z-index:999999;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:16px 18px;width:290px;font-family:-apple-system,sans-serif;font-size:13px;color:#e8e8e8;box-shadow:0 8px 30px rgba(0,0,0,.75);';
+panel.innerHTML='<div style="font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:9px;"><span style="color:#3b82f6;">Williams</span> <span style="color:#e1306c;text-shadow:0 0 12px rgba(225,48,108,.5);">DEV</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><b style="font-size:14px;">📥 IG Extractor</b><button id="_igx_s" style="background:#333;border:none;color:#aaa;cursor:pointer;border-radius:6px;padding:3px 9px;font-size:11px;">■ Stop</button></div><div id="_igx_st" style="color:#aaa;font-size:12px;margin-bottom:10px;">⏳ Haciendo scroll...</div><div style="display:flex;gap:14px;margin-bottom:14px;"><div><div style="color:#aaa;font-size:11px;">Total</div><b id="_igx_t" style="font-size:18px;">0</b></div><div><div style="color:#aaa;font-size:11px;">Verif. ✓</div><b id="_igx_v" style="font-size:18px;color:#3b82f6;">0</b></div><div><div style="color:#aaa;font-size:11px;">Sin verif.</div><b id="_igx_nv" style="font-size:18px;color:#22c55e;">0</b></div></div><div id="_igx_btns" style="display:none;flex-direction:column;gap:8px;"><button id="_igx_ca" style="background:#333;border:1px solid #444;color:#e8e8e8;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;text-align:left;">Copiar todos</button><button id="_igx_cn" style="background:#0d2a1a;border:1px solid #22c55e44;color:#22c55e;cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;width:100%;text-align:left;">Copiar sin verificados</button></div>';
+document.body.appendChild(panel);
+var stopped=false;
+var users=new Map();
+var SKIP={explore:1,accounts:1,p:1,reel:1,reels:1,tv:1,direct:1,stories:1,channel:1,audio:1,location:1,about:1,ar:1,vr:1,legal:1,privacy:1,terms:1,emails:1};
+function getU(href){try{var url=new URL(href);if(url.hostname.indexOf('instagram.com')<0)return null;var parts=url.pathname.split('/').filter(Boolean);if(parts.length===1&&!SKIP[parts[0]])return parts[0];}catch(e){}return null;}
+function collect(){
+Array.from(dialog.querySelectorAll('a')).forEach(function(a){var u=getU(a.href);if(u&&!users.has(u))users.set(u,false);});
+Array.from(dialog.querySelectorAll('[aria-label]')).forEach(function(b){var al=(b.getAttribute('aria-label')||'').toLowerCase();if(al.indexOf('verif')<0)return;var c=b.parentElement,hops=0;while(c&&hops<8){var ln=Array.from(c.querySelectorAll('a')).map(function(a){return getU(a.href);}).filter(Boolean)[0];if(ln){users.set(ln,true);break;}c=c.parentElement;hops++;}});
+}
+function stats(){var t=users.size,v=0;users.forEach(function(val){if(val)v++;});document.getElementById('_igx_t').textContent=t;document.getElementById('_igx_v').textContent=v;document.getElementById('_igx_nv').textContent=t-v;}
+document.getElementById('_igx_s').onclick=function(){stopped=true;this.textContent='Detenido';};
+var delay=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
+(async function(){
+var findSearchInput=function(){return document.querySelector('input[placeholder="Buscar"]')||document.querySelector('input[placeholder="Search"]')||document.querySelector('input[type="text"][placeholder*="Busca"]');};
+if(!findSearchInput()){alert('⚠️ AVISO: No se detectó el input de búsqueda.\\n\\nAsegúrate de:\\n✓ Tener el modal de Seguidos/Seguidores ABIERTO\\n✓ Ver el cuadro de búsqueda en pantalla\\n✓ Que el cuadro esté visible y accesible\\n\\nSi aún así falla, recarga Instagram y reintenta.');return;}
+var lastH=-1,lastC=-1,stall=0;
+while(!stopped){
+collect();stats();
+scrollDiv.scrollTop=scrollDiv.scrollHeight;
+document.getElementById('_igx_st').textContent='⏳ Cargando... ('+users.size+' usuarios)';
+await delay(1300);
+var h=scrollDiv.scrollHeight,c=users.size;
+if(h===lastH&&c===lastC){stall++;if(stall>=3){document.getElementById('_igx_st').textContent='⏳ Esperando que IG cargue mas... ('+users.size+')';await delay(2200);collect();stats();c=users.size;}if(stall>=12)break;}else{stall=0;}
+lastH=h;lastC=c;
+}
+collect();stats();
+var t=users.size,v=0;users.forEach(function(val){if(val)v++;});var nv=t-v;
+document.getElementById('_igx_st').textContent='✅ '+t+' usuarios extraidos';
+var sb=document.getElementById('_igx_s');sb.textContent='✕ Cerrar';sb.onclick=function(){panel.remove();};
+document.getElementById('_igx_btns').style.display='flex';
+var ba=document.getElementById('_igx_ca'),bn=document.getElementById('_igx_cn');
+ba.textContent='Copiar todos ('+t+')';bn.textContent='Copiar sin verificados ('+nv+')';
+ba.onclick=function(){var l=[];users.forEach(function(val,k){l.push(k);});navigator.clipboard.writeText(l.join('\\n')).then(function(){ba.textContent='✅ Copiado!';});};
+bn.onclick=function(){var l=[];users.forEach(function(val,k){if(!val)l.push(k);});navigator.clipboard.writeText(l.join('\\n')).then(function(){bn.textContent='✅ Copiado!';});};
+})();
+})()`;
+  return 'javascript:' + encodeURIComponent(code);
+}
+
+document.getElementById('bmExtract').href = buildExtractorBM();
+document.getElementById('bmAuto').href = buildAutoBM();
+
+// ── Probar el código aquí mismo (valida que ejecuta sin errores) ──
+document.getElementById('btnTestAuto').addEventListener('click', function() {
+  var statusEl = document.getElementById('autoStatus');
+  statusEl.style.display = 'block';
+  try {
+    // Ejecutar el código — en esta página mostrará "Ve a tu perfil" porque no es IG
+    eval(getAutoFullCode());
+    statusEl.style.color = '#22c55e';
+    statusEl.textContent = '✅ El código ejecuta sin errores. El panel debería verse arriba a la derecha (dirá que vayas a tu perfil — es normal, no estamos en Instagram).';
+  } catch(e) {
+    statusEl.style.color = '#e1306c';
+    statusEl.textContent = '❌ Error en el código: ' + e.message;
+  }
+});
+
+// ── Copiar el bookmarklet completo al portapapeles ──
+document.getElementById('btnCopyAuto').addEventListener('click', function() {
+  var href = buildAutoBM();
+  var btn = this;
+  navigator.clipboard.writeText(href).then(function() {
+    btn.textContent = '✅ Copiado (' + (href.length/1024).toFixed(1) + ' KB)';
+    var statusEl = document.getElementById('autoStatus');
+    statusEl.style.display = 'block';
+    statusEl.style.color = '#888';
+    statusEl.textContent = 'Pégalo como URL de un favorito nuevo. Si Chrome borra "javascript:" del inicio, escríbelo a mano.';
+    setTimeout(function() { btn.textContent = '📋 Copiar código (método manual)'; }, 3000);
+  });
+});
+
+
+
+
+// ═══════════════════════════════════════
+// UNFOLLOW BOOKMARKLET (built dynamically with users + delays)
+// ═══════════════════════════════════════
+const usersEl   = document.getElementById('users');
+const counterEl = document.getElementById('counter');
+const minEl     = document.getElementById('minDelay');
+const maxEl     = document.getElementById('maxDelay');
+const minValEl  = document.getElementById('minVal');
+const maxValEl  = document.getElementById('maxVal');
+const estimateEl = document.getElementById('estimate');
+const bmUnfollow = document.getElementById('bmUnfollow');
+
+function parseUsers(raw) {
+  return raw.split(/[\s,\n]+/).map(function(u) { return u.trim(); }).filter(Boolean);
+}
+
+function fmt(ms) { return (ms / 1000).toFixed(1) + 's'; }
+
+function buildUnfollowBM(users, minD, maxD) {
+  const total = users.length;
+  const code = `(function(){
+var users=${JSON.stringify(users)};
+var minD=${minD},maxD=${maxD};
+if(!users.length){alert('No hay usuarios en la lista.');return;}
+var ex=document.getElementById('_ig_uf_p');if(ex)ex.remove();
+var panel=document.createElement('div');
+panel.id='_ig_uf_p';
+panel.style.cssText='position:fixed;bottom:20px;right:20px;z-index:999999;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:16px 18px;width:265px;font-family:-apple-system,sans-serif;font-size:13px;color:#e8e8e8;box-shadow:0 8px 30px rgba(0,0,0,.65);';
+var h='';
+h+='<div style="font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:9px;"><span style="color:#3b82f6;">Williams</span> <span style="color:#e1306c;text-shadow:0 0 12px rgba(225,48,108,.5);">DEV</span></div>';
+h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">';
+h+='<b style="font-size:14px;">⚡ IG Unfollow</b>';
+h+='<button id="_ig_stop" style="background:#333;border:none;color:#aaa;cursor:pointer;border-radius:6px;padding:3px 9px;font-size:11px;">■ Stop</button>';
+h+='</div>';
+h+='<div id="_ig_cur" style="color:#aaa;font-size:12px;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Iniciando...</div>';
+h+='<div style="display:flex;gap:12px;">';
+h+='<div><div style="color:#aaa;font-size:11px;">Progreso</div><b id="_ig_prog">0/${total}</b></div>';
+h+='<div><div style="color:#aaa;font-size:11px;">Deseguidos</div><b id="_ig_unf" style="color:#22c55e;">0</b></div>';
+h+='<div><div style="color:#aaa;font-size:11px;">No enc.</div><b id="_ig_nf" style="color:#eab308;">0</b></div>';
+h+='</div>';
+panel.innerHTML=h;
+document.body.appendChild(panel);
+var stopped=false;
+document.getElementById('_ig_stop').onclick=function(){stopped=true;this.textContent='Detenido';};
+var delay=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
+var randD=function(){return delay(minD+Math.random()*(maxD-minD));};
+var setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
+var res={unfollowed:[],notFound:[]};
+(async function(){
+  for(var i=0;i<users.length;i++){
+    if(stopped)break;
+    var u=users[i];
+    document.getElementById('_ig_cur').textContent='🔍 '+u;
+    document.getElementById('_ig_prog').textContent=(i+1)+'/'+users.length;
+    var inp=document.querySelector('input[placeholder="Buscar"]')||document.querySelector('input[placeholder="Search"]')||document.querySelector('input[type="text"][placeholder*="Busca"]')||document.querySelector('input[type="text"]');
+    if(!inp||!inp.parentElement){if(i===0)alert('❌ No se encontró el input de búsqueda.\\nAsegúrate de:\\n1. Abrir el modal de Seguidos\\n2. Ver el cuadro de búsqueda en pantalla\\n3. Recargar el navegador si falla');document.getElementById('_ig_cur').textContent='❌ Modal no encontrado';break;}
+    setter.call(inp,u);
+    inp.dispatchEvent(new Event('input',{bubbles:true}));
+    await delay(1200);
+    var sig=Array.from(document.querySelectorAll('button')).find(function(b){return (b.textContent.trim()==='Siguiendo'||b.textContent.trim()==='Following');});
+    if(sig){
+      sig.click();
+      await delay(700+Math.random()*400);
+      var dej=Array.from(document.querySelectorAll('button')).find(function(b){return (b.textContent.trim()==='Dejar de seguir'||b.textContent.trim()==='Unfollow');});
+      if(dej)dej.click();
+      res.unfollowed.push(u);
+      document.getElementById('_ig_unf').textContent=res.unfollowed.length;
+    }else{
+      res.notFound.push(u);
+      document.getElementById('_ig_nf').textContent=res.notFound.length;
+    }
+    window._igResults=res;
+    await randD();
+  }
+  document.getElementById('_ig_cur').textContent='✅ Completado';
+  var s=document.getElementById('_ig_stop');
+  s.textContent='Cerrar';
+  s.onclick=function(){panel.remove();};
+  alert('✅ Completado\\nDeseguidos: '+res.unfollowed.length+'\\nNo encontrados: '+res.notFound.length);
+})();
+})()`;
+  return 'javascript:' + encodeURIComponent(code);
+}
+
+function update() {
+  const users = parseUsers(usersEl.value);
+  const minD  = parseInt(minEl.value);
+  const maxD  = Math.max(parseInt(maxEl.value), minD + 500);
+  maxEl.value = maxD;
+
+  minValEl.textContent = fmt(minD);
+  maxValEl.textContent = fmt(maxD);
+
+  const n = users.length;
+  counterEl.textContent = n + ' usuario' + (n !== 1 ? 's' : '') + ' detectado' + (n !== 1 ? 's' : '');
+
+  if (n > 0) {
+    const minT = (n * minD / 60000).toFixed(1);
+    const maxT = (n * maxD / 60000).toFixed(1);
+    const avgT = (n * (minD + maxD) / 2 / 60000).toFixed(1);
+    estimateEl.innerHTML = 'Tiempo estimado: <b>' + minT + ' – ' + maxT + ' min</b> &nbsp;·&nbsp; promedio ~' + avgT + ' min para ' + n + ' usuarios';
+  } else {
+    estimateEl.innerHTML = '';
+  }
+
+  bmUnfollow.href = buildUnfollowBM(users, minD, maxD);
+}
+
+usersEl.addEventListener('input', update);
+minEl.addEventListener('input', update);
+maxEl.addEventListener('input', update);
+update();
+
+
+// ═══════════════════════════════════════
+// COMPARAR — seguidos vs seguidores
+// ═══════════════════════════════════════
+const followingEl  = document.getElementById('following');
+const followersEl   = document.getElementById('followers');
+const cFollowingEl  = document.getElementById('cFollowing');
+const cFollowersEl  = document.getElementById('cFollowers');
+const diffSummaryEl = document.getElementById('diffSummary');
+const diffWrapEl    = document.getElementById('diffWrap');
+const diffResultEl  = document.getElementById('diffResult');
+const btnCopyDiff   = document.getElementById('btnCopyDiff');
+const btnSendDiff   = document.getElementById('btnSendDiff');
+
+function norm(u) { return u.trim().toLowerCase().replace(/^@+/, ''); }
+
+function computeDiff() {
+  const followingRaw  = parseUsers(followingEl.value);
+  const followersList = parseUsers(followersEl.value);
+  const followersSet  = new Set(followersList.map(norm));
+
+  cFollowingEl.textContent = followingRaw.length + ' seguidos';
+  cFollowersEl.textContent = followersList.length + ' seguidores';
+
+  if (!followingRaw.length || !followersList.length) {
+    diffWrapEl.style.display = 'none';
+    diffSummaryEl.innerHTML = '';
+    return;
+  }
+
+  const seen = new Set();
+  const notBack = [];
+  let mutual = 0;
+
+  followingRaw.forEach(function(u) {
+    const n = norm(u);
+    if (!n || seen.has(n)) return;
+    seen.add(n);
+    if (followersSet.has(n)) mutual++;
+    else notBack.push(n);
+  });
+
+  diffResultEl.value = notBack.join('\n');
+  diffWrapEl.style.display = 'block';
+  diffSummaryEl.innerHTML = '<b>' + notBack.length + '</b> no te siguen de vuelta &nbsp;·&nbsp; ' + mutual + ' seguidores mutuos';
+}
+
+followingEl.addEventListener('input', computeDiff);
+followersEl.addEventListener('input', computeDiff);
+
+btnCopyDiff.onclick = function() {
+  if (!diffResultEl.value.trim()) return;
+  navigator.clipboard.writeText(diffResultEl.value).then(function() {
+    btnCopyDiff.textContent = '✅ Copiado';
+    setTimeout(function() { btnCopyDiff.textContent = '📋 Copiar'; }, 1500);
+  });
+};
+
+btnSendDiff.onclick = function() {
+  if (!diffResultEl.value.trim()) return;
+  usersEl.value = diffResultEl.value;
+  update();
+  usersEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  btnSendDiff.textContent = '✅ Enviado';
+  setTimeout(function() { btnSendDiff.textContent = '⬇ Enviar a deseguir'; }, 1500);
+};
+
+computeDiff();
+</script>
+
+<script>
+// ===== UI extra: shortcut por SO, mobile gate, copiar link =====
+(function(){
+  var isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent);
+  var kb = document.getElementById('kbShortcut');
+  if (kb && isMac) kb.textContent = '\u2318 + Shift + B';
+
+  // Detectar celular / pantalla táctil pequeña
+  var coarse = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  var small = window.innerWidth < 720;
+  var gate = document.getElementById('mobileGate');
+  if (gate && coarse && small) gate.style.display = 'flex';
+
+  var cont = document.getElementById('mgContinue');
+  if (cont) cont.onclick = function(){ gate.style.display = 'none'; };
+
+  var copyLink = document.getElementById('mgCopyLink');
+  if (copyLink) copyLink.onclick = function(){
+    var url = window.location.href;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function(){
+        copyLink.textContent = '\u2705 Link copiado — pégalo en tu compu';
+      }).catch(function(){ copyLink.textContent = url; });
+    } else { copyLink.textContent = url; }
+  };
+})();
+</script>
+</body>
+</html>
