@@ -890,10 +890,10 @@ h2.kicker { display: block; margin: 0; }
     <div class="hero-inner">
       <img class="hero-avatar" src="williams.jpg" alt="Williams" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><rect width=%22120%22 height=%22120%22 fill=%22%23C9F73F%22/><text x=%2260%22 y=%2282%22 font-size=%2264%22 fill=%22%23131804%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22>W</text></svg>'">
       <div class="hero-text">
-        <span class="hero-prompt">$ williams --deja-de-seguir<span class="hero-cursor"></span></span>
+        <span class="hero-prompt">Hecho por Williams · gratis y sin instalar nada<span class="hero-cursor"></span></span>
         <h1>Deja de seguir a quien <mark>no te sigue</mark></h1>
-        <p><b>¡Hey! Acá Williams</b> <span class="wave">👋</span> Espero te sirva. Arrastras el botón una vez y, en tu perfil de Instagram, un clic hace todo: analiza tus listas, calcula quién no te sigue de vuelta y los deja de seguir con pausas.</p>
-        <span class="hero-note">solo_computadora · sin_instalar_nada</span>
+        <p><b>¡Hey! Acá Williams</b> <span class="wave">👋</span> Espero te sirva. Arrastras un botón una sola vez y, cuando entres a tu Instagram, un clic te muestra quién no te sigue de vuelta y te deja quitarlos.</p>
+        <span class="hero-note" style="color:#34d399;">🔒 No te pide tu contraseña · nada sale de tu computadora</span>
       </div>
     </div>
   </section>
@@ -904,17 +904,17 @@ h2.kicker { display: block; margin: 0; }
     <div class="steps-wrap" style="margin-top:12px;">
       <div class="step">
         <span class="num">1</span>
-        <span class="txt">Muestra la barra de favoritos con <span id="kbShortcut">Ctrl + Shift + B</span>.
-          <span class="fakebar"><span>★ tus favoritos</span><span class="drop">suelta aquí ↓</span></span>
+        <span class="txt">Muestra la <b>barra de favoritos</b> — la fila que aparece arriba, bajo la dirección web. Pulsa <span id="kbShortcut">Ctrl + Shift + B</span> (si ya estaba visible y se esconde, púlsalo otra vez).
+          <span class="fakebar"><span>★ así se ve tu barra — está arriba ↑</span></span>
         </span>
       </div>
       <div class="step">
         <span class="num">2</span>
-        <span class="txt">Arrastra a esa barra el botón del modo que elijas (abajo ↓). Queda guardado para siempre — se hace una sola vez.</span>
+        <span class="txt">Arrastra a esa barra el <b style="color:#34d399;">botón verde</b> (más abajo). Queda guardado para siempre — esto se hace una sola vez.</span>
       </div>
       <div class="step">
         <span class="num">3</span>
-        <span class="txt">Abre <span class="tag-inline">instagram.com/tu_usuario</span> y haz clic en el botón guardado. El resto es automático.</span>
+        <span class="txt">Abre Instagram, entra a <b>TU perfil</b> (tu foto, arriba a la derecha) y haz clic en el botón que guardaste. El resto es automático.</span>
       </div>
     </div>
   </section>
@@ -942,59 +942,69 @@ h2.kicker { display: block; margin: 0; }
           </div>
         </div>
       </details>
+      <p style="font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px;">🛡️ Por defecto va en <b style="color:#34d399;">seguro</b> (lo menos detectable). <b>Ojo:</b> el ritmo se guarda dentro del botón al arrastrarlo — si lo cambias después, vuelve a arrastrar el botón.</p>
     </div>
   </section>
 
   <!-- ELIGE MODO -->
   <section class="wrap block">
-    <h2 class="kicker">[ ELIGE TU MODO Y ARRÁSTRALO ]</h2>
-    <div class="usar" style="margin-top:12px;">
+    <h2 class="kicker">[ ELIGE CÓMO LIMPIAR ]</h2>
+    <p class="adv-intro" style="margin:8px 0 0;text-align:left;">¿No sabes cuál? Usa el <b style="color:#34d399;">botón verde</b> de abajo — es el recomendado y sirve para casi todos.</p>
+    <div class="usar usar-single" style="margin-top:14px;">
       <div class="usar-card is-primary" style="border-color:#22c55e;box-shadow:0 0 42px rgba(34,197,94,.16);">
+        <span style="display:inline-block;background:#22c55e;color:#0b0b0f;font-family:var(--font-mono);font-size:11px;font-weight:800;letter-spacing:.08em;padding:5px 11px;border-radius:999px;margin-bottom:14px;">✅ EMPIEZA POR AQUÍ</span>
         <div class="usar-head">
           <div class="usar-ic" aria-hidden="true" style="background:rgba(34,197,94,.16);color:#34d399;">🛡️</div>
           <div class="usar-htext">
-            <h3 class="usar-title">Híbrido auto <span style="font-size:10px;font-family:var(--font-mono);color:#34d399;vertical-align:2px;">RECOMENDADO</span></h3>
-            <p class="usar-sub">Lo más seguro · analiza por API, deja de seguir con clics reales</p>
+            <h3 class="usar-title">La forma más segura</h3>
+            <p class="usar-sub">Tú revisas la lista y decides a quién quitar — lo más parecido a hacerlo a mano</p>
           </div>
         </div>
-        <a id="bmHibrido" class="usar-btn drag" draggable="true" href="#" onclick="return false;" style="background:linear-gradient(135deg,#22c55e,#0d9488);box-shadow:0 8px 28px -8px rgba(34,197,94,.55);">🛡️ arrastrar “IG Híbrido”</a>
-        <p class="usar-hint">Analiza tu cuenta por API y te deja la lista revisable (buscador, desmarcar verificadas, checkbox). Al confirmar <b>abre tu modal de Seguidos y deja de seguir con clics reales</b> — la petición la arma Instagram, así deja menos rastro. Es más lento; usa el ritmo de arriba.</p>
+        <a id="bmHibrido" class="usar-btn drag" draggable="true" href="#" onclick="return igDrag(this);" style="background:linear-gradient(135deg,#22c55e,#0d9488);box-shadow:0 8px 28px -8px rgba(34,197,94,.55);">🛡️ arrastra este botón</a>
+        <p class="usar-hint">Te muestra quién no te sigue de vuelta con foto, para que <b>revises y quites solo a quien tú quieras</b>. Va con pausas para cuidar tu cuenta (por eso es un poco más lento).</p>
         <div class="drag-fallback">
-          <button class="mini" id="btnCopyHibrido">no puedo arrastrar — copiar código</button>
+          <button class="mini" id="btnCopyHibrido">no puedo arrastrar — copiar el código</button>
         </div>
         <div id="hibridoStatus" class="status"></div>
       </div>
-      <div class="usar-card">
-        <div class="usar-head">
-          <div class="usar-ic" aria-hidden="true">🖱️</div>
-          <div class="usar-htext">
-            <h3 class="usar-title">Modo clics</h3>
-            <p class="usar-sub">Sencillo · lee y deja de seguir todo con clics, sin API</p>
-          </div>
-        </div>
-        <a id="bmAuto" class="usar-btn drag" draggable="true" href="#" onclick="return false;">⚡ arrastrar “IG Auto”</a>
-        <p class="usar-hint">Hace scroll por tus listas, calcula quién no te sigue de vuelta y deja de seguir solo, con el ritmo que elijas arriba.</p>
-        <div class="drag-fallback">
-          <button class="mini" id="btnCopyAuto">no puedo arrastrar — copiar código</button>
-        </div>
-        <div id="autoStatus" class="status"></div>
-      </div>
-      <div class="usar-card">
-        <div class="usar-head">
-          <div class="usar-ic" aria-hidden="true">🔌</div>
-          <div class="usar-htext">
-            <h3 class="usar-title">Analizador API</h3>
-            <p class="usar-sub">Más rápido · analiza y deja de seguir todo por API</p>
-          </div>
-        </div>
-        <a id="bmApiAuto" class="usar-btn drag is-dark" draggable="true" href="#" onclick="return false;">🔎 arrastrar “IG Analizador”</a>
-        <p class="usar-hint">Analiza tu cuenta con una animación de escaneo y te deja la misma lista revisable. Es el más rápido, pero el que más rastro deja (todo por API).</p>
-        <div class="drag-fallback">
-          <button class="mini" id="btnCopyApi">no puedo arrastrar — copiar código</button>
-        </div>
-        <div id="apiStatus" class="status"></div>
-      </div>
     </div>
+
+    <details class="manual" style="margin-top:16px;">
+      <summary>otras dos formas (avanzado)</summary>
+      <p class="adv-intro">Solo si sabes lo que haces. La verde de arriba es la mejor para casi todos.</p>
+      <div class="usar">
+        <div class="usar-card">
+          <div class="usar-head">
+            <div class="usar-ic" aria-hidden="true">🖱️</div>
+            <div class="usar-htext">
+              <h3 class="usar-title">Todo con clics</h3>
+              <p class="usar-sub">Simple · también te deja revisar la lista antes de quitar</p>
+            </div>
+          </div>
+          <a id="bmAuto" class="usar-btn drag" draggable="true" href="#" onclick="return igDrag(this);">⚡ arrastrar “IG Auto”</a>
+          <p class="usar-hint">Hace todo con clics dentro de Instagram: busca quién no te sigue y te deja quitarlos, con el ritmo que elijas arriba.</p>
+          <div class="drag-fallback">
+            <button class="mini" id="btnCopyAuto">no puedo arrastrar — copiar el código</button>
+          </div>
+          <div id="autoStatus" class="status"></div>
+        </div>
+        <div class="usar-card">
+          <div class="usar-head">
+            <div class="usar-ic" aria-hidden="true">🔌</div>
+            <div class="usar-htext">
+              <h3 class="usar-title">El más rápido</h3>
+              <p class="usar-sub">Rapidísimo · pero es el que más arriesga tu cuenta</p>
+            </div>
+          </div>
+          <a id="bmApiAuto" class="usar-btn drag is-dark" draggable="true" href="#" onclick="return igDrag(this);">🔎 arrastrar “IG Analizador”</a>
+          <p class="usar-hint">Te muestra la misma lista revisable, pero quita a la gente de la forma más rápida y directa. Úsalo con el ritmo “seguro” y por tandas.</p>
+          <div class="drag-fallback">
+            <button class="mini" id="btnCopyApi">no puedo arrastrar — copiar el código</button>
+          </div>
+          <div id="apiStatus" class="status"></div>
+        </div>
+      </div>
+    </details>
   </section>
 
   <!-- SEGURIDAD -->
@@ -1572,7 +1582,7 @@ var p=document.createElement('div');p.id=P;
 p.style.cssText='position:fixed;top:16px;right:16px;z-index:2147483647;background:#141418;border:1px solid #2b2b33;border-radius:16px;width:372px;max-width:94vw;max-height:88vh;display:flex;flex-direction:column;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:13px;color:#ececf0;box-shadow:0 24px 60px rgba(0,0,0,.6);overflow:hidden;';
 p.innerHTML=''
 +'<div style="display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid #2b2b33;">'
-+'<div style="font-weight:800;"><span style="color:#3b82f6">Williams</span> <span style="color:#8a8a96;font-weight:600">· Analizador</span></div>'
++'<div style="font-weight:800;"><span style="color:#3b82f6">Williams</span> <span style="color:#8a8a96;font-weight:600">· '+(EXEC==='click'?'Híbrido':'Analizador')+'</span></div>'
 +'<button id="_ia_x" style="margin-left:auto;background:#222;border:none;color:#aaa;border-radius:8px;padding:5px 11px;cursor:pointer;font-size:14px;">✕</button>'
 +'</div>'
 +'<div id="_ia_scan" style="padding:28px 20px;text-align:center;">'
@@ -1587,19 +1597,20 @@ p.innerHTML=''
 +'<div style="display:flex;gap:10px;">'
 +'<div style="background:#1b1b20;border:1px solid #2b2b33;border-radius:12px;padding:11px 4px;flex:1;"><div id="_ia_fg" style="font-size:22px;font-weight:800;">0</div><div style="color:#8a8a96;font-size:11px">Sigues</div></div>'
 +'<div style="background:#1b1b20;border:1px solid #2b2b33;border-radius:12px;padding:11px 4px;flex:1;"><div id="_ia_fr" style="font-size:22px;font-weight:800;">0</div><div style="color:#8a8a96;font-size:11px">Te siguen</div></div>'
-+'<div style="background:#1b1b20;border:1px solid #2b2b33;border-radius:12px;padding:11px 4px;flex:1;"><div id="_ia_nb" style="font-size:22px;font-weight:800;color:#eab308">0</div><div style="color:#8a8a96;font-size:11px">No devuelven</div></div>'
++'<div style="background:#1b1b20;border:1px solid #2b2b33;border-radius:12px;padding:11px 4px;flex:1;"><div id="_ia_nb" style="font-size:22px;font-weight:800;color:#eab308">0</div><div style="color:#8a8a96;font-size:11px">No te siguen</div></div>'
 +'</div>'
 +'</div>'
 +'<div id="_ia_res" style="display:none;flex-direction:column;min-height:0;flex:1;">'
 +'<div style="padding:12px 14px;border-bottom:1px solid #2b2b33;">'
-+'<div style="color:#c8c8d0;font-size:13px;margin-bottom:3px;"><b id="_ia_h" style="color:#e1306c;font-size:15px;">0</b> no te siguen de vuelta</div>'
-+'<div style="color:#8a8a96;font-size:11.5px;margin-bottom:10px;">✔️ <b id="_ia_hv" style="color:#4aa3ff;">0</b> verificadas · <b id="_ia_hn" style="color:#ececf0;">0</b> sin verificar · desmarca a quién conservar</div>'
++'<div style="color:#ececf0;font-size:14px;font-weight:700;margin-bottom:6px;"><b id="_ia_h" style="color:#e1306c;">0</b> no te siguen de vuelta</div>'
++'<div style="background:rgba(225,48,108,.12);border:1px solid rgba(225,48,108,.3);border-radius:9px;padding:8px 10px;color:#f2f2f6;font-size:12px;line-height:1.45;margin-bottom:9px;">✅ Ya están <b>todos marcados</b> para dejar de seguir. Quita el ✓ a quien quieras <b>conservar</b>.</div>'
++'<div style="color:#8a8a96;font-size:11.5px;margin-bottom:10px;">🔵 <b id="_ia_hv" style="color:#4aa3ff;">0</b> con insignia azul · <b id="_ia_hn" style="color:#ececf0;">0</b> normales</div>'
 +'<input id="_ia_q" placeholder="🔍 Buscar usuario o nombre…" style="width:100%;background:#1b1b20;border:1px solid #2b2b33;border-radius:9px;color:#ececf0;padding:9px 11px;font-size:13px;outline:none;margin-bottom:9px;">'
 +'<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center;">'
-+'<button id="_ia_fv" style="background:#1b1b20;border:1px solid #2b2b33;color:#ececf0;border-radius:999px;padding:7px 12px;font-size:12px;cursor:pointer;">🔓 desmarcar verificadas (0)</button>'
-+'<button id="_ia_all" style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer;">todas</button>'
-+'<button id="_ia_none" style="background:none;border:none;color:#8a8a96;font-size:12px;cursor:pointer;">ninguna</button>'
-+'<span id="_ia_sel" style="margin-left:auto;color:#22c55e;font-size:12px;font-weight:700;">0 sel.</span>'
++'<button id="_ia_fv" style="background:#1b1b20;border:1px solid #2b2b33;color:#ececf0;border-radius:999px;padding:7px 12px;font-size:12px;cursor:pointer;">🔵 conservar verificados (0)</button>'
++'<button id="_ia_all" style="background:#1b1b20;border:1px solid #2b2b33;color:#ececf0;border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;">marcar todas</button>'
++'<button id="_ia_none" style="background:#1b1b20;border:1px solid #2b2b33;color:#ececf0;border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;">quitar todas</button>'
++'<span id="_ia_sel" style="margin-left:auto;color:#22c55e;font-size:12px;font-weight:700;">0 marcados</span>'
 +'</div>'
 +'</div>'
 +'<div id="_ia_list" style="overflow-y:auto;flex:1;padding:6px;"></div>'
@@ -1635,11 +1646,11 @@ setT('_ia_hv',vCount);setT('_ia_hn',NB.length-vCount);
 var keep=keepGet();NB.forEach(function(u){u.sel=keep.indexOf(String(u.pk))<0;});
 var q='',vOff=false;
 var fvBtn=document.getElementById('_ia_fv');
-fvBtn.textContent='🔓 desmarcar verificadas ('+vCount+')';
+fvBtn.textContent='🔵 conservar verificados ('+vCount+')';
 if(vCount===0){fvBtn.style.opacity='.45';fvBtn.style.pointerEvents='none';}
 var listEl=document.getElementById('_ia_list'),selEl=document.getElementById('_ia_sel');
 function selCount(){return NB.filter(function(u){return u.sel;}).length;}
-function updSel(){selEl.textContent=selCount()+' sel.';document.getElementById('_ia_go').textContent='Dejar de seguir ('+selCount()+')';}
+function updSel(){selEl.textContent=selCount()+' marcados';document.getElementById('_ia_go').textContent='Dejar de seguir ('+selCount()+')';}
 function render(){var ql=q.trim().toLowerCase();
 var rows=NB.filter(function(u){if(ql&&u.un.toLowerCase().indexOf(ql)<0&&u.name.toLowerCase().indexOf(ql)<0)return false;return true;});
 if(!rows.length){listEl.innerHTML='<div style="color:#6a6a76;text-align:center;padding:26px;font-size:12px;">Nada con este filtro.</div>';updSel();return;}
@@ -1654,12 +1665,13 @@ listEl.innerHTML=rows.map(function(u){return '<label style="display:flex;align-i
 Array.from(listEl.querySelectorAll('input[type=checkbox]')).forEach(function(cb){cb.onchange=function(){var pk=cb.getAttribute('data-pk');var u=NB.filter(function(x){return String(x.pk)===pk;})[0];if(u)u.sel=cb.checked;updSel();};});
 updSel();}
 document.getElementById('_ia_q').oninput=function(){q=this.value;render();};
-document.getElementById('_ia_fv').onclick=function(){vOff=!vOff;NB.forEach(function(u){if(u.v)u.sel=!vOff;});this.textContent=(vOff?'☑️ marcar verificadas (':'🔓 desmarcar verificadas (')+vCount+')';this.style.background=vOff?'#2a0f1a':'#1b1b20';this.style.borderColor=vOff?'#e1306c':'#2b2b33';this.style.color=vOff?'#e1306c':'#ececf0';render();};
+document.getElementById('_ia_fv').onclick=function(){vOff=!vOff;NB.forEach(function(u){if(u.v)u.sel=!vOff;});this.textContent=(vOff?'↩️ volver a incluir verificados (':'🔵 conservar verificados (')+vCount+')';this.style.background=vOff?'#2a0f1a':'#1b1b20';this.style.borderColor=vOff?'#e1306c':'#2b2b33';this.style.color=vOff?'#e1306c':'#ececf0';render();};
 document.getElementById('_ia_all').onclick=function(){NB.forEach(function(u){u.sel=true;});render();};
 document.getElementById('_ia_none').onclick=function(){NB.forEach(function(u){u.sel=false;});render();};
 render();
 document.getElementById('_ia_go').onclick=async function(){var go=this;var targets=NB.filter(function(u){return u.sel;});
 if(!targets.length){alert('No hay nadie seleccionado.');return;}
+if(!confirm('¿Dejar de seguir a '+targets.length+' cuenta(s)? Esto no se puede deshacer fácilmente.'))return;
 if(document.getElementById('_ia_rem').checked){var ka=keepGet();NB.forEach(function(u){if(!u.sel&&ka.indexOf(String(u.pk))<0)ka.push(String(u.pk));});keepSave(ka);}
 go.disabled=true;go.style.opacity=.5;document.getElementById('_ia_prog').style.display='block';
 var bar=document.getElementById('_ia_bar'),pt=document.getElementById('_ia_pt'),un=0;
@@ -1761,6 +1773,18 @@ bar.style.width='100%';pt.textContent='✅ Dejaste de seguir a '+un;go.textConte
   wireCopy('btnCopyApi', 'bmApiAuto', 'apiStatus');
   wireCopy('btnCopyHibrido', 'bmHibrido', 'hibridoStatus');
 })();
+</script>
+
+<script>
+// Si el usuario HACE CLIC en el botón (en vez de arrastrarlo), se lo explicamos ahí mismo
+window.igDrag = function(btn){
+  try{
+    var card = btn.closest('.usar-card');
+    var s = card ? card.querySelector('.status') : null;
+    if(s){ s.style.display='block'; s.style.color='#eab308'; s.textContent='⬆️ Este botón no se hace clic — arrástralo hasta tu barra de favoritos (arriba del navegador).'; }
+  }catch(e){}
+  return false;
+};
 </script>
 </body>
 </html>
