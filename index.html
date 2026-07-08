@@ -1577,12 +1577,13 @@ p.innerHTML=''
 +'</div>'
 +'<div id="_ia_res" style="display:none;flex-direction:column;min-height:0;flex:1;">'
 +'<div style="padding:12px 14px;border-bottom:1px solid #2b2b33;">'
-+'<div style="color:#8a8a96;font-size:12px;margin-bottom:10px;"><b id="_ia_h" style="color:#eab308">0</b> no te siguen de vuelta · desmarca a quién quieres conservar</div>'
++'<div style="color:#c8c8d0;font-size:13px;margin-bottom:3px;"><b id="_ia_h" style="color:#e1306c;font-size:15px;">0</b> no te siguen de vuelta</div>'
++'<div style="color:#8a8a96;font-size:11.5px;margin-bottom:10px;">✔️ <b id="_ia_hv" style="color:#4aa3ff;">0</b> verificadas · <b id="_ia_hn" style="color:#ececf0;">0</b> sin verificar · desmarca a quién conservar</div>'
 +'<input id="_ia_q" placeholder="🔍 Buscar usuario o nombre…" style="width:100%;background:#1b1b20;border:1px solid #2b2b33;border-radius:9px;color:#ececf0;padding:9px 11px;font-size:13px;outline:none;margin-bottom:9px;">'
 +'<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center;">'
-+'<button id="_ia_fv" style="background:#1b1b20;border:1px solid #2b2b33;color:#ececf0;border-radius:999px;padding:6px 11px;font-size:12px;cursor:pointer;">Ocultar verificados ✓</button>'
-+'<button id="_ia_all" style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer;">Todos</button>'
-+'<button id="_ia_none" style="background:none;border:none;color:#8a8a96;font-size:12px;cursor:pointer;">Ninguno</button>'
++'<button id="_ia_fv" style="background:#1b1b20;border:1px solid #2b2b33;color:#ececf0;border-radius:999px;padding:7px 12px;font-size:12px;cursor:pointer;">🔓 desmarcar verificadas (0)</button>'
++'<button id="_ia_all" style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer;">todas</button>'
++'<button id="_ia_none" style="background:none;border:none;color:#8a8a96;font-size:12px;cursor:pointer;">ninguna</button>'
 +'<span id="_ia_sel" style="margin-left:auto;color:#22c55e;font-size:12px;font-weight:700;">0 sel.</span>'
 +'</div>'
 +'</div>'
@@ -1614,26 +1615,31 @@ setT('_ia_nb',NB.length);setT('_ia_st','¡Listo! Revisa la lista');await wait(45
 document.getElementById('_ia_scan').style.display='none';
 document.getElementById('_ia_res').style.display='flex';
 setT('_ia_h',NB.length);
+var vCount=NB.filter(function(u){return u.v;}).length;
+setT('_ia_hv',vCount);setT('_ia_hn',NB.length-vCount);
 var keep=keepGet();NB.forEach(function(u){u.sel=keep.indexOf(String(u.pk))<0;});
-var hideV=false,q='';
+var q='',vOff=false;
+var fvBtn=document.getElementById('_ia_fv');
+fvBtn.textContent='🔓 desmarcar verificadas ('+vCount+')';
+if(vCount===0){fvBtn.style.opacity='.45';fvBtn.style.pointerEvents='none';}
 var listEl=document.getElementById('_ia_list'),selEl=document.getElementById('_ia_sel');
 function selCount(){return NB.filter(function(u){return u.sel;}).length;}
 function updSel(){selEl.textContent=selCount()+' sel.';document.getElementById('_ia_go').textContent='Dejar de seguir ('+selCount()+')';}
 function render(){var ql=q.trim().toLowerCase();
-var rows=NB.filter(function(u){if(hideV&&u.v)return false;if(ql&&u.un.toLowerCase().indexOf(ql)<0&&u.name.toLowerCase().indexOf(ql)<0)return false;return true;});
+var rows=NB.filter(function(u){if(ql&&u.un.toLowerCase().indexOf(ql)<0&&u.name.toLowerCase().indexOf(ql)<0)return false;return true;});
 if(!rows.length){listEl.innerHTML='<div style="color:#6a6a76;text-align:center;padding:26px;font-size:12px;">Nada con este filtro.</div>';updSel();return;}
 listEl.innerHTML=rows.map(function(u){return '<label style="display:flex;align-items:center;gap:12px;padding:10px 8px;border-bottom:1px solid #1f1f26;border-radius:8px;cursor:pointer;transition:background .1s;" onmouseover="this.style.background=\'#1e1e25\'" onmouseout="this.style.background=\'transparent\'">'
 +'<img src="'+u.pic+'" onerror="this.onerror=null;this.src=\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2244%22 height=%2244%22><rect width=%2244%22 height=%2244%22 fill=%22%232a2a33%22/><text x=%2222%22 y=%2230%22 font-size=%2222%22 fill=%22%236c6c78%22 text-anchor=%22middle%22 font-family=%22sans-serif%22>@</text></svg>\'" style="width:44px;height:44px;border-radius:50%;object-fit:cover;background:#2a2a33;flex-shrink:0;border:1px solid #33333c;">'
 +'<span style="flex:1;min-width:0;">'
-+'<span style="display:block;color:#ffffff;font-weight:700;font-size:14px;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@'+u.un+(u.v?' <span style="color:#4aa3ff;font-size:12px;">✓</span>':'')+'</span>'
-+(u.name?'<span style="display:block;color:#9a9aa6;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;">'+u.name+'</span>':'')
++'<span style="display:block;color:#ffffff!important;font-weight:800;font-size:15px;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@'+u.un+(u.v?' <span style="color:#4aa3ff!important;font-size:12px;">✓</span>':'')+'</span>'
++(u.name?'<span style="display:block;color:#a8a8b3!important;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;">'+u.name+'</span>':'')
 +'</span>'
 +'<input type="checkbox" data-pk="'+u.pk+'"'+(u.sel?' checked':'')+' style="width:21px;height:21px;flex-shrink:0;accent-color:#e1306c;cursor:pointer;">'
 +'</label>';}).join('');
 Array.from(listEl.querySelectorAll('input[type=checkbox]')).forEach(function(cb){cb.onchange=function(){var pk=cb.getAttribute('data-pk');var u=NB.filter(function(x){return String(x.pk)===pk;})[0];if(u)u.sel=cb.checked;updSel();};});
 updSel();}
 document.getElementById('_ia_q').oninput=function(){q=this.value;render();};
-document.getElementById('_ia_fv').onclick=function(){hideV=!hideV;this.style.background=hideV?'#2a0f1a':'#1b1b20';this.style.borderColor=hideV?'#e1306c':'#2b2b33';this.style.color=hideV?'#e1306c':'#ececf0';render();};
+document.getElementById('_ia_fv').onclick=function(){vOff=!vOff;NB.forEach(function(u){if(u.v)u.sel=!vOff;});this.textContent=(vOff?'☑️ marcar verificadas (':'🔓 desmarcar verificadas (')+vCount+')';this.style.background=vOff?'#2a0f1a':'#1b1b20';this.style.borderColor=vOff?'#e1306c':'#2b2b33';this.style.color=vOff?'#e1306c':'#ececf0';render();};
 document.getElementById('_ia_all').onclick=function(){NB.forEach(function(u){u.sel=true;});render();};
 document.getElementById('_ia_none').onclick=function(){NB.forEach(function(u){u.sel=false;});render();};
 render();
