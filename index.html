@@ -949,12 +949,27 @@ h2.kicker { display: block; margin: 0; }
   <section class="wrap block">
     <h2 class="kicker">[ ELIGE TU MODO Y ARRÁSTRALO ]</h2>
     <div class="usar" style="margin-top:12px;">
-      <div class="usar-card is-primary">
+      <div class="usar-card is-primary" style="border-color:#22c55e;box-shadow:0 0 42px rgba(34,197,94,.16);">
+        <div class="usar-head">
+          <div class="usar-ic" aria-hidden="true" style="background:rgba(34,197,94,.16);color:#34d399;">🛡️</div>
+          <div class="usar-htext">
+            <h3 class="usar-title">Híbrido auto <span style="font-size:10px;font-family:var(--font-mono);color:#34d399;vertical-align:2px;">RECOMENDADO</span></h3>
+            <p class="usar-sub">Lo más seguro · analiza por API, deja de seguir con clics reales</p>
+          </div>
+        </div>
+        <a id="bmHibrido" class="usar-btn drag" draggable="true" href="#" onclick="return false;" style="background:linear-gradient(135deg,#22c55e,#0d9488);box-shadow:0 8px 28px -8px rgba(34,197,94,.55);">🛡️ arrastrar “IG Híbrido”</a>
+        <p class="usar-hint">Analiza tu cuenta por API y te deja la lista revisable (buscador, desmarcar verificadas, checkbox). Al confirmar <b>abre tu modal de Seguidos y deja de seguir con clics reales</b> — la petición la arma Instagram, así deja menos rastro. Es más lento; usa el ritmo de arriba.</p>
+        <div class="drag-fallback">
+          <button class="mini" id="btnCopyHibrido">no puedo arrastrar — copiar código</button>
+        </div>
+        <div id="hibridoStatus" class="status"></div>
+      </div>
+      <div class="usar-card">
         <div class="usar-head">
           <div class="usar-ic" aria-hidden="true">🖱️</div>
           <div class="usar-htext">
             <h3 class="usar-title">Modo clics</h3>
-            <p class="usar-sub">Recomendado · imita clics humanos, lo más seguro</p>
+            <p class="usar-sub">Sencillo · lee y deja de seguir todo con clics, sin API</p>
           </div>
         </div>
         <a id="bmAuto" class="usar-btn drag" draggable="true" href="#" onclick="return false;">⚡ arrastrar “IG Auto”</a>
@@ -973,26 +988,11 @@ h2.kicker { display: block; margin: 0; }
           </div>
         </div>
         <a id="bmApiAuto" class="usar-btn drag is-dark" draggable="true" href="#" onclick="return false;">🔎 arrastrar “IG Analizador”</a>
-        <p class="usar-hint">Analiza tu cuenta con una animación de escaneo y te deja una lista revisable: buscador, ocultar verificados y checkbox por persona. <b>Tú eliges</b> a quién dejar de seguir.</p>
+        <p class="usar-hint">Analiza tu cuenta con una animación de escaneo y te deja la misma lista revisable. Es el más rápido, pero el que más rastro deja (todo por API).</p>
         <div class="drag-fallback">
           <button class="mini" id="btnCopyApi">no puedo arrastrar — copiar código</button>
         </div>
         <div id="apiStatus" class="status"></div>
-      </div>
-      <div class="usar-card">
-        <div class="usar-head">
-          <div class="usar-ic" aria-hidden="true">🛡️</div>
-          <div class="usar-htext">
-            <h3 class="usar-title">Híbrido auto <span style="font-size:10px;font-family:var(--font-mono);color:var(--accent-text);vertical-align:2px;">NUEVO</span></h3>
-            <p class="usar-sub">Lo más seguro · analiza por API, deja de seguir con clics reales</p>
-          </div>
-        </div>
-        <a id="bmHibrido" class="usar-btn drag" draggable="true" href="#" onclick="return false;" style="background:linear-gradient(135deg,#22c55e,#0d9488);box-shadow:0 8px 28px -8px rgba(34,197,94,.55);">🛡️ arrastrar “IG Híbrido”</a>
-        <p class="usar-hint">La misma lista revisable del Analizador, pero al confirmar <b>abre tu modal de Seguidos y deja de seguir con clics reales</b> — las peticiones las arma Instagram, así que dejan menos rastro. Es más lento; usa el ritmo de arriba.</p>
-        <div class="drag-fallback">
-          <button class="mini" id="btnCopyHibrido">no puedo arrastrar — copiar código</button>
-        </div>
-        <div id="hibridoStatus" class="status"></div>
       </div>
     </div>
   </section>
