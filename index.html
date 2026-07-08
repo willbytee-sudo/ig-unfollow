@@ -8,9 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Unbounded:wght@600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<script>
-  (function(){ try { var t = localStorage.getItem('wl-theme'); if(!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light'; document.documentElement.setAttribute('data-theme', t); } catch(e){} })();
-</script>
+<script>document.documentElement.setAttribute('data-theme','dark');</script>
 <style>
 /* Tokens del sitio de Willito — dirección "terminal" (claro · oscuro)
    Fuentes: Unbounded (display) · Space Grotesk (cuerpo) · JetBrains Mono (mono)
@@ -392,6 +390,9 @@ mark { background: var(--lime); color: var(--lime-ink); }
 .prose-h2 { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: .01em; margin: 2em 0 .7em; padding-top: 1.4em; border-top: 1px solid var(--line); scroll-margin-top: 88px; }
 .prose-h3 { font-family: var(--font-body); font-weight: 700; font-size: 16px; margin: 1.5em 0 .5em; }
 .prose-empty { font-size: 16px; line-height: 1.7; color: var(--muted); }
+.prose mark { background: var(--lime); color: var(--lime-ink); padding: 0 5px; border-radius: 3px; }
+.pullquote { font-family: var(--font-display); font-weight: 800; font-size: 19px; line-height: 1.35; letter-spacing: -.01em; color: var(--ink); margin: 1.7em 0; padding: 2px 0 2px 16px; border-left: 3px solid var(--lime); text-wrap: pretty; }
+.pullquote .u { color: var(--lime); }
 .callout { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--lime); border-radius: 8px; padding: 12px 15px; font-size: 15px; line-height: 1.6; color: var(--muted); margin: 1.2em 0; }
 .prose-list { list-style: none; margin: 0 0 1.4em; padding: 0; display: flex; flex-direction: column; gap: .6em; }
 .prose-list li { position: relative; padding-left: 1.5em; font-size: 16px; line-height: 1.6; color: var(--ink); text-wrap: pretty; }
@@ -689,6 +690,7 @@ mark { background: var(--lime); color: var(--lime-ink); }
   .prose .lead { font-size: 18px; }
   .prose-list li { font-size: 17px; }
   .prose-h2 { font-size: 20px; }
+  .pullquote { font-size: 23px; }
   .usar-title { font-size: 18px; }
   .nivel-row { grid-template-columns: 110px 1fr; }
   .toc { display: block; }
@@ -702,7 +704,6 @@ mark { background: var(--lime); color: var(--lime-ink); }
 
 /* ═══ IG Unfollow — adiciones sobre el sistema Willito ═══ */
 body { padding-bottom: 40px; }
-main { }
 .hero-note { font-family: var(--font-mono); font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: var(--faint); }
 .hero p .wave { font-style: normal; }
 
@@ -719,7 +720,7 @@ main { }
 .drag-fallback { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
 .mini { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--muted); background: transparent; border: 1px solid var(--line-2); border-radius: 7px; padding: 6px 10px; cursor: pointer; }
 .mini:hover { border-color: var(--edge-strong); color: var(--ink); }
-.status { display: none; margin-top: 10px; font-size: 12px; line-height: 1.5; font-family: var(--font-mono); color: var(--muted); }
+.status { display: none; margin-top: 10px; font-size: 12px; line-height: 1.5; font-family: var(--font-mono); color: var(--muted); word-break: break-all; overflow-wrap: anywhere; }
 
 /* ritmo */
 .rhythm-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); padding: 18px; margin-top: 12px; }
@@ -773,15 +774,98 @@ details.manual[open] > summary { margin-bottom: 16px; }
 
 .tag-inline { font-family: var(--font-mono); font-size: 11.5px; background: var(--tile); color: var(--accent-text); padding: 2px 7px; border-radius: 5px; }
 
+
+/* remapea el acento lima -> rosa Instagram, y todo a oscuro. Gana por orden de cascada. */
+:root, :root[data-theme="dark"], :root[data-theme="light"] {
+  --bg: #0B0B0F;
+  --card: #17171C;
+  --code-bg: #000000;
+  --ink: #F2F2F6;
+  --text-2: #C8C8D0;
+  --muted: #9A9AA6;
+  --faint: #8A8A96;              /* subido para pasar contraste AA en texto pequeño */
+  --line: #2A2A33;
+  --line-soft: #23232B;
+  --line-2: #34343E;
+  --line-3: #3E3E48;
+  --lime: #E1306C;               /* ACENTO = rosa Instagram */
+  --lime-ink: #FFFFFF;           /* texto sobre el acento */
+  --accent-text: #FF5C93;        /* rosa brillante: enlaces mono, $, números de paso */
+  --badge-text: #FF5C93;
+  --tile: rgba(225,48,108,.16);
+  --tile-community: #1C1C22;
+  --tile-community-ink: #9A9AA6;
+  --hover-bg: #1E1E25;
+  --row-hover: #1B1B22;
+  --live-dot: #FF4D4D; --live-bg: rgba(255,77,77,.12); --live-border: rgba(255,77,77,.32); --live-text: #FF7A7A;
+  --level-beginner-bg: rgba(225,48,108,.16); --level-beginner-text: #FF5C93;
+  --level-mid-bg: rgba(255,176,32,.14); --level-mid-text: #FFB020;
+  --level-adv-bg: rgba(255,77,77,.14); --level-adv-text: #FF7A7A;
+  --shadow-card-hover: none;
+  --shadow-featured: 0 0 40px rgba(225,48,108,.14);
+  --shadow-featured-lg: 0 0 46px rgba(225,48,108,.16);
+  --shadow-btn: none;
+  --shadow-btn-active: 0 0 22px rgba(225,48,108,.45);
+  --shadow-banner: none;
+  --shadow-banner-hover: 0 0 32px rgba(225,48,108,.35);
+  --shadow-avatar: 0 0 30px rgba(225,48,108,.32);
+  --shadow-avatar-lg: 0 0 34px rgba(225,48,108,.32);
+  --shadow-cta: 0 0 40px rgba(225,48,108,.12);
+  --shadow-cta-lg: 0 0 46px rgba(225,48,108,.14);
+  --edge-strong: #E1306C;
+  --featured-name: var(--ink);
+  --dotgrid: rgba(225,48,108,.09);
+}
+
+/* degradado Instagram en el título y en la marca */
+.hero h1 mark {
+  background: linear-gradient(90deg,#F58529,#E1306C,#C13584,#833AB4);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  padding: 0; filter: drop-shadow(0 0 20px rgba(225,48,108,.35));
+}
+.brand b {
+  background: linear-gradient(90deg,#F58529,#E1306C,#C13584);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+
+/* botones arrastrables con el degradado Instagram (clics = cálido, API = púrpura) */
+.usar-btn.drag { background: linear-gradient(135deg,#F58529,#E1306C,#C13584); color:#fff; border-color: transparent; box-shadow: 0 8px 28px -8px rgba(225,48,108,.6); }
+.usar-btn.drag:hover { box-shadow: 0 12px 38px -10px rgba(225,48,108,.85); }
+.usar-btn.drag.is-dark { background: linear-gradient(135deg,#4F5BD5,#833AB4,#C13584); box-shadow: 0 8px 28px -8px rgba(131,58,180,.6); }
+.usar-btn.drag.is-dark:hover { box-shadow: 0 12px 38px -10px rgba(131,58,180,.9); }
+.btn-primary { background: linear-gradient(135deg,#F58529,#E1306C,#C13584); color:#fff; border-color: transparent; }
+.bm-mini { background: linear-gradient(135deg,#F58529,#E1306C,#C13584) !important; color:#fff !important; }
+
+/* headings de sección (accesibilidad) sin cambiar el look del kicker */
+h2.kicker { display: block; margin: 0; }
+
+/* etiqueta del nav (antes reusaba .live-badge de forma no idiomática) */
+.nav-tag { display: inline-flex; align-items: center; background: var(--tile); border: 1px solid var(--line); color: var(--accent-text); border-radius: var(--r-pill); padding: 6px 12px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 700; letter-spacing: .06em; }
+
+/* hero de escritorio: esta página no tiene .live-banner -> avatar + texto en una fila */
+@media (min-width: 1024px) {
+  .hero-text { grid-row: 1; }
+  .hero-avatar { grid-row: 1; align-self: center; }
+}
+
+/* slider: thumb también en Firefox */
+.range-wrap input[type=range]::-moz-range-thumb { width:16px; height:16px; background: var(--lime); border:1px solid var(--edge-strong); border-radius:50%; box-sizing:border-box; cursor:pointer; }
+.range-wrap input[type=range]::-moz-range-track { height:4px; background: var(--line-2); border-radius:4px; }
+
+/* objetivo táctil del enlace del gate de celular */
+.mgate-link { display:inline-block; padding:12px 16px; min-height:44px; }
+
 </style>
 </head>
 <body>
 
 <!-- gate de celular -->
-<div id="mobileGate" class="mgate" style="display:none;">
+<div id="mobileGate" class="mgate" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="mgTitle">
   <div class="mgate-card">
-    <div class="em">💻</div>
-    <h2>Ábrela en tu computadora</h2>
+    <div class="em" aria-hidden="true">💻</div>
+    <h2 id="mgTitle">Ábrela en tu computadora</h2>
     <p>Se usa arrastrando un botón a la barra de favoritos del navegador — algo que solo existe en la <b>computadora</b>. En el celular Instagram no la deja correr.</p>
     <button id="mgCopyLink" class="btn btn-primary">Copiar el link para la compu</button>
     <button id="mgContinue" class="mgate-link">ver la página de todos modos</button>
@@ -795,10 +879,7 @@ details.manual[open] > summary { margin-bottom: 16px; }
       <b>Williams</b>
     </a>
     <div class="nav-actions">
-      <span class="live-badge" style="background:var(--tile);border-color:var(--line);color:var(--accent-text);">IG&nbsp;UNFOLLOW</span>
-      <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" title="Cambiar tema">
-        <span class="i-moon" aria-hidden="true">🌙</span><span class="i-sun" aria-hidden="true">☀️</span>
-      </button>
+      <span class="nav-tag">IG&nbsp;UNFOLLOW</span>
     </div>
   </div>
 </nav>
@@ -819,7 +900,7 @@ details.manual[open] > summary { margin-bottom: 16px; }
 
   <!-- INSTALAR -->
   <section class="wrap block">
-    <span class="kicker">[ INSTALAR — UNA SOLA VEZ ]</span>
+    <h2 class="kicker">[ INSTALAR — UNA SOLA VEZ ]</h2>
     <div class="steps-wrap" style="margin-top:12px;">
       <div class="step">
         <span class="num">1</span>
@@ -838,43 +919,9 @@ details.manual[open] > summary { margin-bottom: 16px; }
     </div>
   </section>
 
-  <!-- ELIGE MODO -->
+  <!-- RITMO (va antes de los botones: así queda horneado en el momento de arrastrar) -->
   <section class="wrap block">
-    <span class="kicker">[ ELIGE UN MODO Y ARRÁSTRALO ]</span>
-    <div class="usar" style="margin-top:12px;">
-      <div class="usar-card is-primary">
-        <div class="usar-head">
-          <div class="usar-ic">🖱️</div>
-          <div class="usar-htext">
-            <h3 class="usar-title">Modo clics</h3>
-            <p class="usar-sub">Recomendado · imita clics humanos, lo más seguro</p>
-          </div>
-        </div>
-        <a id="bmAuto" class="usar-btn drag" draggable="true" href="#" onclick="return false;">⚡ arrastrar “IG Auto”</a>
-        <p class="usar-hint">Hace scroll por tus listas, calcula quién no te sigue de vuelta y deja de seguir solo, con el ritmo que elijas abajo.</p>
-        <div class="drag-fallback">
-          <button class="mini" id="btnTestAuto">probar que funciona</button>
-          <button class="mini" id="btnCopyAuto">no puedo arrastrar — copiar código</button>
-        </div>
-        <div id="autoStatus" class="status"></div>
-      </div>
-      <div class="usar-card">
-        <div class="usar-head">
-          <div class="usar-ic">🔌</div>
-          <div class="usar-htext">
-            <h3 class="usar-title">Analizador API</h3>
-            <p class="usar-sub">Más potente · te muestra la lista con foto y filtros</p>
-          </div>
-        </div>
-        <a id="bmApiAuto" class="usar-btn drag is-dark" draggable="true" href="#" onclick="return false;">🔎 arrastrar “IG Analizador”</a>
-        <p class="usar-hint">Analiza tu cuenta con una animación de escaneo y te deja una lista revisable: buscador, ocultar verificados y checkbox por persona. <b>Tú eliges</b> a quién dejar de seguir.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- RITMO -->
-  <section class="wrap block">
-    <span class="kicker">[ RITMO — CADA CUÁNTO DEJA DE SEGUIR ]</span>
+    <h2 class="kicker">[ RITMO — CADA CUÁNTO DEJA DE SEGUIR ]</h2>
     <div class="rhythm-card">
       <div class="chips" id="presetChips">
         <button type="button" class="chip preset" data-min="8000" data-max="20000">🛡️ seguro</button>
@@ -898,10 +945,47 @@ details.manual[open] > summary { margin-bottom: 16px; }
     </div>
   </section>
 
+  <!-- ELIGE MODO -->
+  <section class="wrap block">
+    <h2 class="kicker">[ ELIGE TU MODO Y ARRÁSTRALO ]</h2>
+    <div class="usar" style="margin-top:12px;">
+      <div class="usar-card is-primary">
+        <div class="usar-head">
+          <div class="usar-ic" aria-hidden="true">🖱️</div>
+          <div class="usar-htext">
+            <h3 class="usar-title">Modo clics</h3>
+            <p class="usar-sub">Recomendado · imita clics humanos, lo más seguro</p>
+          </div>
+        </div>
+        <a id="bmAuto" class="usar-btn drag" draggable="true" href="#" onclick="return false;">⚡ arrastrar “IG Auto”</a>
+        <p class="usar-hint">Hace scroll por tus listas, calcula quién no te sigue de vuelta y deja de seguir solo, con el ritmo que elijas arriba.</p>
+        <div class="drag-fallback">
+          <button class="mini" id="btnCopyAuto">no puedo arrastrar — copiar código</button>
+        </div>
+        <div id="autoStatus" class="status"></div>
+      </div>
+      <div class="usar-card">
+        <div class="usar-head">
+          <div class="usar-ic" aria-hidden="true">🔌</div>
+          <div class="usar-htext">
+            <h3 class="usar-title">Analizador API</h3>
+            <p class="usar-sub">Más potente · te muestra la lista con foto y filtros</p>
+          </div>
+        </div>
+        <a id="bmApiAuto" class="usar-btn drag is-dark" draggable="true" href="#" onclick="return false;">🔎 arrastrar “IG Analizador”</a>
+        <p class="usar-hint">Analiza tu cuenta con una animación de escaneo y te deja una lista revisable: buscador, ocultar verificados y checkbox por persona. <b>Tú eliges</b> a quién dejar de seguir.</p>
+        <div class="drag-fallback">
+          <button class="mini" id="btnCopyApi">no puedo arrastrar — copiar código</button>
+        </div>
+        <div id="apiStatus" class="status"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- SEGURIDAD -->
   <section class="wrap block">
     <div class="box box-tip">
-      <div class="box-ic">⚠️</div>
+      <div class="box-ic" aria-hidden="true">⚠️</div>
       <div><span class="box-k">cuídate de los límites</span>Dejar de seguir a mucha gente muy rápido puede causar un bloqueo temporal de Instagram. El botón ya mete pausas aleatorias; si vas a limpiar cientos, hazlo por tandas y no todos los días. En modo <b>seguro</b> es mucho menos detectable.</div>
     </div>
   </section>
@@ -1216,7 +1300,7 @@ document.getElementById('bmExtract').href = buildExtractorBM();
 document.getElementById('bmAuto').href = buildAutoBM();
 
 // ── Probar el código aquí mismo (valida que ejecuta sin errores) ──
-document.getElementById('btnTestAuto').addEventListener('click', function() {
+var _bt=document.getElementById('btnTestAuto'); if(_bt) _bt.addEventListener('click', function() {
   var statusEl = document.getElementById('autoStatus');
   statusEl.style.display = 'block';
   try {
@@ -1232,7 +1316,7 @@ document.getElementById('btnTestAuto').addEventListener('click', function() {
 
 // ── Copiar el bookmarklet completo al portapapeles ──
 document.getElementById('btnCopyAuto').addEventListener('click', function() {
-  var href = buildAutoBM();
+  var minD=parseInt(document.getElementById('minDelay').value);var maxD=Math.max(parseInt(document.getElementById('maxDelay').value),minD+500);var href = buildAutoBM(minD,maxD);
   var btn = this;
   navigator.clipboard.writeText(href).then(function() {
     btn.textContent = '✅ Copiado (' + (href.length/1024).toFixed(1) + ' KB)';
@@ -1240,7 +1324,7 @@ document.getElementById('btnCopyAuto').addEventListener('click', function() {
     statusEl.style.display = 'block';
     statusEl.style.color = '#888';
     statusEl.textContent = 'Pégalo como URL de un favorito nuevo. Si Chrome borra "javascript:" del inicio, escríbelo a mano.';
-    setTimeout(function() { btn.textContent = '📋 Copiar código (método manual)'; }, 3000);
+    setTimeout(function() { btn.textContent = 'no puedo arrastrar — copiar código'; }, 3000);
   });
 });
 
@@ -1415,7 +1499,7 @@ btnCopyDiff.onclick = function() {
   if (!diffResultEl.value.trim()) return;
   navigator.clipboard.writeText(diffResultEl.value).then(function() {
     btnCopyDiff.textContent = '✅ Copiado';
-    setTimeout(function() { btnCopyDiff.textContent = '📋 Copiar'; }, 1500);
+    setTimeout(function() { btnCopyDiff.textContent = 'copiar'; }, 1500);
   });
 };
 
@@ -1425,7 +1509,7 @@ btnSendDiff.onclick = function() {
   update();
   usersEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
   btnSendDiff.textContent = '✅ Enviado';
-  setTimeout(function() { btnSendDiff.textContent = '⬇ Enviar a deseguir'; }, 1500);
+  setTimeout(function() { btnSendDiff.textContent = '⬇ enviar a deseguir'; }, 1500);
 };
 
 computeDiff();
@@ -1442,10 +1526,10 @@ computeDiff();
   var coarse = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   var small = window.innerWidth < 720;
   var gate = document.getElementById('mobileGate');
-  if (gate && coarse && small) gate.style.display = 'flex';
+  if (gate && coarse && small) { gate.style.display='flex'; document.body.style.overflow='hidden'; }
 
   var cont = document.getElementById('mgContinue');
-  if (cont) cont.onclick = function(){ gate.style.display = 'none'; };
+  if (cont) cont.onclick = function(){ gate.style.display='none'; document.body.style.overflow=''; };
 
   var copyLink = document.getElementById('mgCopyLink');
   if (copyLink) copyLink.onclick = function(){
@@ -1612,6 +1696,51 @@ bar.style.width='100%';pt.textContent='✅ Dejaste de seguir a '+un;go.textConte
     var next = cur === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     try { localStorage.setItem('wl-theme', next); } catch(e){}
+  });
+})();
+</script>
+
+<script>
+(function(){
+  var c = document.getElementById('btnCopyApi'); if(!c) return;
+  c.addEventListener('click', function(){
+    var a = document.getElementById('bmApiAuto'); var href = a ? a.getAttribute('href') : ''; var b = this;
+    var s = document.getElementById('apiStatus');
+    if (navigator.clipboard) navigator.clipboard.writeText(href).then(function(){
+      b.textContent = '✅ copiado (' + (href.length/1024).toFixed(1) + ' KB)';
+      if(s){ s.style.display='block'; s.textContent='Pégalo como URL de un favorito nuevo. Si Chrome borra "javascript:" del inicio, escríbelo a mano.'; }
+      setTimeout(function(){ b.textContent = 'no puedo arrastrar — copiar código'; }, 3000);
+    }).catch(function(){ if(s){ s.style.display='block'; s.textContent=href; } });
+  });
+})();
+</script>
+
+<script>
+(function(){
+  var c = document.getElementById('btnCopyApi'); if(!c) return;
+  c.addEventListener('click', function(){
+    var a = document.getElementById('bmApiAuto'); var href = a ? a.getAttribute('href') : ''; var b = this;
+    var s = document.getElementById('apiStatus');
+    if (navigator.clipboard) navigator.clipboard.writeText(href).then(function(){
+      b.textContent = '✅ copiado (' + (href.length/1024).toFixed(1) + ' KB)';
+      if(s){ s.style.display='block'; s.textContent='Pégalo como URL de un favorito nuevo. Si Chrome borra "javascript:" del inicio, escríbelo a mano.'; }
+      setTimeout(function(){ b.textContent = 'no puedo arrastrar — copiar código'; }, 3000);
+    }).catch(function(){ if(s){ s.style.display='block'; s.textContent=href; } });
+  });
+})();
+</script>
+
+<script>
+(function(){
+  var c = document.getElementById('btnCopyApi'); if(!c) return;
+  c.addEventListener('click', function(){
+    var a = document.getElementById('bmApiAuto'); var href = a ? a.getAttribute('href') : ''; var b = this;
+    var s = document.getElementById('apiStatus');
+    if (navigator.clipboard) navigator.clipboard.writeText(href).then(function(){
+      b.textContent = '✅ copiado (' + (href.length/1024).toFixed(1) + ' KB)';
+      if(s){ s.style.display='block'; s.textContent='Pégalo como URL de un favorito nuevo. Si Chrome borra "javascript:" del inicio, escríbelo a mano.'; }
+      setTimeout(function(){ b.textContent = 'no puedo arrastrar — copiar código'; }, 3000);
+    }).catch(function(){ if(s){ s.style.display='block'; s.textContent=href; } });
   });
 })();
 </script>
