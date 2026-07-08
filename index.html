@@ -969,7 +969,7 @@ h2.kicker { display: block; margin: 0; }
           <div class="usar-ic" aria-hidden="true">🔌</div>
           <div class="usar-htext">
             <h3 class="usar-title">Analizador API</h3>
-            <p class="usar-sub">Más potente · te muestra la lista con foto y filtros</p>
+            <p class="usar-sub">Más rápido · analiza y deja de seguir todo por API</p>
           </div>
         </div>
         <a id="bmApiAuto" class="usar-btn drag is-dark" draggable="true" href="#" onclick="return false;">🔎 arrastrar “IG Analizador”</a>
@@ -978,6 +978,21 @@ h2.kicker { display: block; margin: 0; }
           <button class="mini" id="btnCopyApi">no puedo arrastrar — copiar código</button>
         </div>
         <div id="apiStatus" class="status"></div>
+      </div>
+      <div class="usar-card">
+        <div class="usar-head">
+          <div class="usar-ic" aria-hidden="true">🛡️</div>
+          <div class="usar-htext">
+            <h3 class="usar-title">Híbrido auto <span style="font-size:10px;font-family:var(--font-mono);color:var(--accent-text);vertical-align:2px;">NUEVO</span></h3>
+            <p class="usar-sub">Lo más seguro · analiza por API, deja de seguir con clics reales</p>
+          </div>
+        </div>
+        <a id="bmHibrido" class="usar-btn drag" draggable="true" href="#" onclick="return false;" style="background:linear-gradient(135deg,#22c55e,#0d9488);box-shadow:0 8px 28px -8px rgba(34,197,94,.55);">🛡️ arrastrar “IG Híbrido”</a>
+        <p class="usar-hint">La misma lista revisable del Analizador, pero al confirmar <b>abre tu modal de Seguidos y deja de seguir con clics reales</b> — las peticiones las arma Instagram, así que dejan menos rastro. Es más lento; usa el ritmo de arriba.</p>
+        <div class="drag-fallback">
+          <button class="mini" id="btnCopyHibrido">no puedo arrastrar — copiar código</button>
+        </div>
+        <div id="hibridoStatus" class="status"></div>
       </div>
     </div>
   </section>
@@ -1547,7 +1562,7 @@ var P='_ig_api_p';var old=document.getElementById(P);if(old)old.remove();var oS=
 function ck(n){var m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)'));return m?m[2]:null;}
 var myId=ck('ds_user_id'),csrf=ck('csrftoken'),APP='936619743392459';
 if(!myId){alert('Abre instagram.com e inicia sesion primero.');return;}
-var minD=__MIN__,maxD=__MAX__,KEEP='_ig_keep_forever';
+var minD=__MIN__,maxD=__MAX__,EXEC='__EXEC__',KEEP='_ig_keep_forever';
 function keepGet(){try{return JSON.parse(localStorage.getItem(KEEP)||'[]');}catch(e){return [];}}
 function keepSave(a){try{localStorage.setItem(KEEP,JSON.stringify(a));}catch(e){}}
 var st=document.createElement('style');st.id='_ig_api_s';
@@ -1648,6 +1663,25 @@ if(!targets.length){alert('No hay nadie seleccionado.');return;}
 if(document.getElementById('_ia_rem').checked){var ka=keepGet();NB.forEach(function(u){if(!u.sel&&ka.indexOf(String(u.pk))<0)ka.push(String(u.pk));});keepSave(ka);}
 go.disabled=true;go.style.opacity=.5;document.getElementById('_ia_prog').style.display='block';
 var bar=document.getElementById('_ia_bar'),pt=document.getElementById('_ia_pt'),un=0;
+if(EXEC==='click'){
+pt.textContent='Abriendo tu lista de Seguidos…';
+var lk=Array.from(document.querySelectorAll('a[href]')).find(function(a){return a.href&&a.href.indexOf('/following')>-1;});if(lk)lk.click();
+var dlg=null,tw=0;while(tw<8000){dlg=document.querySelector('div[role="dialog"]');if(dlg)break;await wait(300);tw+=300;}
+if(!dlg){pt.textContent='❌ Abre tú el modal de Seguidos y toca de nuevo.';go.disabled=false;go.style.opacity=1;return;}
+await wait(1500);
+var setV=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set,nf=0;
+for(var ci=0;ci<targets.length;ci++){if(stopped)break;var cu=targets[ci];
+pt.textContent=(ci+1)+'/'+targets.length+'  ·  @'+cu.un;bar.style.width=Math.round(ci/targets.length*100)+'%';
+var inp=document.querySelector('input[placeholder="Buscar"]')||document.querySelector('input[placeholder="Search"]')||document.querySelector('input[type="text"][placeholder*="Busca"]')||dlg.querySelector('input[type="text"]');
+if(!inp){pt.textContent='❌ No veo el buscador del modal de Seguidos';break;}
+setV.call(inp,cu.un);inp.dispatchEvent(new Event('input',{bubbles:true}));await wait(1400);
+var sig=Array.from(document.querySelectorAll('button')).find(function(b){var t=b.textContent.trim();return t==='Siguiendo'||t==='Following';});
+if(sig){sig.click();await wait(700+Math.random()*400);var dej=Array.from(document.querySelectorAll('button')).find(function(b){var t=b.textContent.trim();return t==='Dejar de seguir'||t==='Unfollow';});if(dej)dej.click();un++;}
+else{nf++;}
+bar.style.width=Math.round((ci+1)/targets.length*100)+'%';
+await wait(minD+Math.random()*(maxD-minD));}
+bar.style.width='100%';pt.textContent='✅ Dejaste de seguir a '+un+(nf?(' · '+nf+' no encontrados'):'');go.textContent='Completado';return;
+}
 for(var i=0;i<targets.length;i++){if(stopped)break;var u=targets[i];
 pt.textContent=(i+1)+'/'+targets.length+'  ·  @'+u.un;bar.style.width=Math.round(i/targets.length*100)+'%';
 var r=await fetch('/api/v1/friendships/destroy/'+u.pk+'/',{method:'POST',headers:Object.assign({'content-type':'application/x-www-form-urlencoded'},H()),credentials:'include',body:''});
@@ -1661,16 +1695,17 @@ bar.style.width='100%';pt.textContent='✅ Dejaste de seguir a '+un;go.textConte
 // ===== MODO API — arma el bookmarklet leyendo el código del analizador (#apiSrc) =====
 (function(){
   var RAW = document.getElementById('apiSrc').textContent;
-  function buildApiCode(minD, maxD){
-    var code = RAW.replace(/__MIN__/g, minD).replace(/__MAX__/g, maxD);
+  function buildApiCode(minD, maxD, exec){
+    var code = RAW.replace(/__MIN__/g, minD).replace(/__MAX__/g, maxD).replace(/__EXEC__/g, exec);
     return 'javascript:' + encodeURIComponent(code);
   }
+  window.buildApiCode = buildApiCode; // para el botón "copiar" del híbrido
   function refreshApi(){
     var minEl=document.getElementById('minDelay'), maxEl=document.getElementById('maxDelay');
     var minD = minEl ? parseInt(minEl.value) : 8000;
     var maxD = maxEl ? Math.max(parseInt(maxEl.value), minD+500) : 20000;
-    var a=document.getElementById('bmApiAuto');
-    if(a) a.href = buildApiCode(minD, maxD);
+    var a=document.getElementById('bmApiAuto');   if(a) a.href = buildApiCode(minD, maxD, 'api');
+    var h=document.getElementById('bmHibrido');   if(h) h.href = buildApiCode(minD, maxD, 'click');
   }
   var mn=document.getElementById('minDelay'), mx=document.getElementById('maxDelay');
   if(mn) mn.addEventListener('input', refreshApi);
@@ -1711,46 +1746,20 @@ bar.style.width='100%';pt.textContent='✅ Dejaste de seguir a '+un;go.textConte
 
 <script>
 (function(){
-  var c = document.getElementById('btnCopyApi'); if(!c) return;
-  c.addEventListener('click', function(){
-    var a = document.getElementById('bmApiAuto'); var href = a ? a.getAttribute('href') : ''; var b = this;
-    var s = document.getElementById('apiStatus');
-    if (navigator.clipboard) navigator.clipboard.writeText(href).then(function(){
-      b.textContent = '✅ copiado (' + (href.length/1024).toFixed(1) + ' KB)';
-      if(s){ s.style.display='block'; s.textContent='Pégalo como URL de un favorito nuevo. Si Chrome borra "javascript:" del inicio, escríbelo a mano.'; }
-      setTimeout(function(){ b.textContent = 'no puedo arrastrar — copiar código'; }, 3000);
-    }).catch(function(){ if(s){ s.style.display='block'; s.textContent=href; } });
-  });
-})();
-</script>
-
-<script>
-(function(){
-  var c = document.getElementById('btnCopyApi'); if(!c) return;
-  c.addEventListener('click', function(){
-    var a = document.getElementById('bmApiAuto'); var href = a ? a.getAttribute('href') : ''; var b = this;
-    var s = document.getElementById('apiStatus');
-    if (navigator.clipboard) navigator.clipboard.writeText(href).then(function(){
-      b.textContent = '✅ copiado (' + (href.length/1024).toFixed(1) + ' KB)';
-      if(s){ s.style.display='block'; s.textContent='Pégalo como URL de un favorito nuevo. Si Chrome borra "javascript:" del inicio, escríbelo a mano.'; }
-      setTimeout(function(){ b.textContent = 'no puedo arrastrar — copiar código'; }, 3000);
-    }).catch(function(){ if(s){ s.style.display='block'; s.textContent=href; } });
-  });
-})();
-</script>
-
-<script>
-(function(){
-  var c = document.getElementById('btnCopyApi'); if(!c) return;
-  c.addEventListener('click', function(){
-    var a = document.getElementById('bmApiAuto'); var href = a ? a.getAttribute('href') : ''; var b = this;
-    var s = document.getElementById('apiStatus');
-    if (navigator.clipboard) navigator.clipboard.writeText(href).then(function(){
-      b.textContent = '✅ copiado (' + (href.length/1024).toFixed(1) + ' KB)';
-      if(s){ s.style.display='block'; s.textContent='Pégalo como URL de un favorito nuevo. Si Chrome borra "javascript:" del inicio, escríbelo a mano.'; }
-      setTimeout(function(){ b.textContent = 'no puedo arrastrar — copiar código'; }, 3000);
-    }).catch(function(){ if(s){ s.style.display='block'; s.textContent=href; } });
-  });
+  function wireCopy(btnId, bmId, statusId){
+    var c = document.getElementById(btnId); if(!c) return;
+    c.addEventListener('click', function(){
+      var a = document.getElementById(bmId); var href = a ? a.getAttribute('href') : ''; var b = this;
+      var s = document.getElementById(statusId);
+      if (navigator.clipboard) navigator.clipboard.writeText(href).then(function(){
+        b.textContent = '✅ copiado (' + (href.length/1024).toFixed(1) + ' KB)';
+        if(s){ s.style.display='block'; s.textContent='Pégalo como URL de un favorito nuevo. Si Chrome borra "javascript:" del inicio, escríbelo a mano.'; }
+        setTimeout(function(){ b.textContent = 'no puedo arrastrar — copiar código'; }, 3000);
+      }).catch(function(){ if(s){ s.style.display='block'; s.textContent=href; } });
+    });
+  }
+  wireCopy('btnCopyApi', 'bmApiAuto', 'apiStatus');
+  wireCopy('btnCopyHibrido', 'bmHibrido', 'hibridoStatus');
 })();
 </script>
 </body>
